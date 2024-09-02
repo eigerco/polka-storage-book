@@ -1,0 +1,18 @@
+# Summary
+
+- [Introduction](./introduction.md)
+- [Getting Started](./getting-started/index.md)
+  - [Local Testnet - Polka Storage Parachain](./getting-started/local-testnet.md)
+  - [CAR server](./getting-started/car-server.md)
+  - [Real-world use case demo](./getting-started/demo.md)
+- [Polka Storage Provider CLI](./storage-provider-cli/index.md)
+  - [`storage`](./storage-provider-cli/storage.md)
+  - [`wallet`](./storage-provider-cli/wallet.md)
+- [Storagext CLI](./storagext-cli/index.md)
+  - [`market`](./storagext-cli/market.md)
+  - [`storage-provider`](./storagext-cli/storage-provider.md)
+  - [`system`](./storagext-cli/system.md)
+- [Pallets](./pallets/index.md)
+  - [Market](./pallets/market.md)
+  - [Storage Provider](./pallets/storage-provider.md)
+- [Glossary](./glossary.md)
