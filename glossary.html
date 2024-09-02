@@ -1,0 +1,477 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Glossary - Polka Storage</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="getting-started/index.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="getting-started/local-testnet.html"><strong aria-hidden="true">2.1.</strong> Local Testnet - Polka Storage Parachain</a></li><li class="chapter-item expanded "><a href="getting-started/car-server.html"><strong aria-hidden="true">2.2.</strong> CAR server</a></li><li class="chapter-item expanded "><a href="getting-started/demo.html"><strong aria-hidden="true">2.3.</strong> Real-world use case demo</a></li></ol></li><li class="chapter-item expanded "><a href="storage-provider-cli/index.html"><strong aria-hidden="true">3.</strong> Polka Storage Provider CLI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="storage-provider-cli/storage.html"><strong aria-hidden="true">3.1.</strong> storage</a></li><li class="chapter-item expanded "><a href="storage-provider-cli/wallet.html"><strong aria-hidden="true">3.2.</strong> wallet</a></li></ol></li><li class="chapter-item expanded "><a href="storagext-cli/index.html"><strong aria-hidden="true">4.</strong> Storagext CLI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="storagext-cli/market.html"><strong aria-hidden="true">4.1.</strong> market</a></li><li class="chapter-item expanded "><a href="storagext-cli/storage-provider.html"><strong aria-hidden="true">4.2.</strong> storage-provider</a></li><li class="chapter-item expanded "><a href="storagext-cli/system.html"><strong aria-hidden="true">4.3.</strong> system</a></li></ol></li><li class="chapter-item expanded "><a href="pallets/index.html"><strong aria-hidden="true">5.</strong> Pallets</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="pallets/market.html"><strong aria-hidden="true">5.1.</strong> Market</a></li><li class="chapter-item expanded "><a href="pallets/storage-provider.html"><strong aria-hidden="true">5.2.</strong> Storage Provider</a></li></ol></li><li class="chapter-item expanded "><a href="glossary.html" class="active"><strong aria-hidden="true">6.</strong> Glossary</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Polka Storage</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="glossary-and-anti-glossary"><a class="header" href="#glossary-and-anti-glossary">Glossary and Anti-Glossary</a></h1>
+<p>This document provides definitions and explanations for terms used throughout the project and a list of terms that should not be used.</p>
+<h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of Contents</a></h2>
+<ul>
+<li><a href="#glossary-and-anti-glossary">Glossary and Anti-Glossary</a>
+<ul>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#glossary">Glossary</a>
+<ul>
+<li><a href="#actor">Actor</a></li>
+<li><a href="#bond">Bond</a></li>
+<li><a href="#collateral">Collateral</a></li>
+<li><a href="#collator">Collator</a></li>
+<li><a href="#committed-capacity">Committed Capacity</a></li>
+<li><a href="#commitment-of-data">Commitment of Data</a></li>
+<li><a href="#commitment-of-replication">Commitment of Replication</a></li>
+<li><a href="#crowdloan">Crowdloan</a></li>
+<li><a href="#deadline">Deadline</a></li>
+<li><a href="#extrinsics">Extrinsics</a></li>
+<li><a href="#fault">Fault</a></li>
+<li><a href="#full-node">Full Node</a></li>
+<li><a href="#invulnerable">Invulnerable</a></li>
+<li><a href="#node">Node</a></li>
+<li><a href="#parachain">Parachain</a></li>
+<li><a href="#partition">Partition</a></li>
+<li><a href="#planck">Planck</a></li>
+<li><a href="#polkadot">Polkadot</a></li>
+</ul>
+</li>
+<li><a href="#proofs">Proofs</a>
+<ul>
+<li><a href="#proving-period">Proving Period</a></li>
+<li><a href="#relay-chain">Relay Chain</a></li>
+<li><a href="#sector">Sector</a></li>
+<li><a href="#session">Session</a></li>
+<li><a href="#slashing">Slashing</a></li>
+<li><a href="#slot-auction">Slot Auction</a></li>
+<li><a href="#staking">Staking</a></li>
+<li><a href="#storage-provider">Storage Provider</a></li>
+<li><a href="#storage-user">Storage User</a></li>
+<li><a href="#system-parachain">System Parachain</a></li>
+</ul>
+</li>
+<li><a href="#anti-glossary">Anti-Glossary</a>
+<ul>
+<li><a href="#term-to-avoid-miner">Term to Avoid: Miner</a></li>
+<li><a href="#term-to-avoid-pledge">Term to Avoid: Pledge</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="glossary"><a class="header" href="#glossary">Glossary</a></h2>
+<p>This section lists terms used throughout the project.</p>
+<h3 id="actor"><a class="header" href="#actor">Actor</a></h3>
+<p>In <a href="https://spec.filecoin.io/#section-glossary.filecoin">Filecoin</a>,
+an <a href="https://spec.filecoin.io/#section-glossary.actor">actor</a> is an on-chain object with its state and set of
+methods. <a href="https://spec.filecoin.io/#section-glossary.actor">Actors</a> define how
+the <a href="https://spec.filecoin.io/#section-glossary.filecoin">Filecoin</a> network manages and updates its global state.</p>
+<h3 id="bond"><a class="header" href="#bond">Bond</a></h3>
+<p>This term is used in:</p>
+<ul>
+<li>
+<p>Parachain <a href="#slot-auction">Slot Auction</a>. To bid in an auction, <a href="#parachain">parachain</a> teams agree to lock up (or
+bond) a portion of DOT tokens for the duration of the lease. While bonded for a lease, the DOT cannot be used for
+other activities like staking or transfers.</p>
+</li>
+<li>
+<p><a href="#collator">Collator</a> slot auction (selection mechanism). It is used as a deposit to become a collator. Candidates can
+register by placing the minimum bond. Then, if an account wants to participate in the <a href="#collator">collator</a> slot
+auction, they have to replace an existing candidate by placing a more significant deposit (bond).</p>
+</li>
+</ul>
+<h3 id="collateral"><a class="header" href="#collateral">Collateral</a></h3>
+<p><a href="https://spec.filecoin.io/#section-glossary.collateral">Collaterals</a> are assets locked up or deposited as a form of security
+to mitigate risks and ensure the performance of specific actions. Collateral acts as a guarantee that an
+individual will fulfil their obligations. Failing to meet obligations or behaving maliciously can result in the loss of
+staked assets or collateral as a penalty for non-compliance or misconduct by <a href="#slashing">slashing</a>.</p>
+<h3 id="collator"><a class="header" href="#collator">Collator</a></h3>
+<p><a href="https://wiki.polkadot.network/docs/learn-collator">Collators</a> maintain <a href="#parachain">parachains</a> by
+collecting <a href="#parachain">parachain</a> transactions from users and producing state transition proofs
+for <a href="#relay-chain">Relay Chain</a> validators. In other words, collators maintain <a href="#parachain">parachains</a> by
+aggregating <a href="#parachain">parachain</a> transactions into <a href="#parachain">parachain</a> block candidates and producing state
+transition proofs (Proof-of-Validity, PoV) for validators. They must provide a financial
+commitment (<a href="#collateral">collateral</a>) to ensure they are incentivized to perform their duties correctly and
+to dissuade malicious behaviour.</p>
+<h3 id="committed-capacity"><a class="header" href="#committed-capacity">Committed Capacity</a></h3>
+<p>The <a href="https://spec.filecoin.io/#section-glossary.capacity-commitment">Committed Capacity</a> (CC) is one of three types of
+deals in which there is effectively no deal, and the <a href="#storage-provider">Storage Provider</a> stores random data inside the
+sector instead of customer data.</p>
+<p>If a <a href="#storage-provider">storage provider</a> doesn't find any available deal proposals appealing, they can alternatively
+make a capacity commitment, filling a sector with arbitrary data, rather than with client data. Maintaining this sector
+allows the <a href="#storage-provider">storage provider</a> to provably demonstrate that they are reserving space on behalf of the
+network.</p>
+<h3 id="commitment-of-data"><a class="header" href="#commitment-of-data">Commitment of Data</a></h3>
+<p>This value is also known as <code>commD</code> or <code>unsealed_cid</code>.
+As the storage miner receives each piece of client data, they place it into a sector. Sectors are the fundamental units of storage in Filecoin,
+and can contain pieces from multiple deals and clients.</p>
+<p>Once a sector is full, a CommD (Commitment of Data, aka UnsealedSectorCID) is produced, representing the root node of all the piece CIDs contained in the sector.</p>
+<h3 id="commitment-of-replication"><a class="header" href="#commitment-of-replication">Commitment of Replication</a></h3>
+<p>The terms <code>commR</code>, <code>sealed_cid</code>, <code>commitment of replication</code> are interchangeable.
+During sealing, the sector data (identified by the CommD) is encoded through a sequence of graph and hashing processes to create a unique replica.
+The root hash of the merkle tree of the resulting replica is the CommRLast.</p>
+<p>The CommRLast is then hashed together with the CommC (another merkle root output from Proof of Replication).
+This generates the CommR (Commitment of Replication, aka SealedSectorCID), which is recorded to the public blockchain.
+The CommRLast is saved privately by the miner for future use in Proof of Spacetime, but is not saved to the chain.</p>
+<h3 id="crowdloan"><a class="header" href="#crowdloan">Crowdloan</a></h3>
+<p>Projects can raise DOT tokens from the community
+through <a href="https://wiki.polkadot.network/docs/learn-crowdloans">crowdloans</a>. Participants pledge their DOT tokens to help
+the project win a parachain slot auction. If successful, the tokens are locked up for the duration of the parachain
+lease, and participants might receive rewards or tokens from the project in return.</p>
+<h3 id="deadline"><a class="header" href="#deadline">Deadline</a></h3>
+<p>A deadline is one of the multiple points during a proving period when proofs for some partitions are due.</p>
+<p>For more information on deadlines, you can read the original Filecoin specification:
+<a href="https://spec.filecoin.io/#section-algorithms.pos.post.design">https://spec.filecoin.io/#section-algorithms.pos.post.design</a></p>
+<h3 id="extrinsics"><a class="header" href="#extrinsics">Extrinsics</a></h3>
+<p>From the <a href="https://wiki.polkadot.network/docs/learn-transactions#pallets-and-extrinsics">Polkadot Wiki</a>:</p>
+<blockquote>
+<p>Within each functional pallet on the blockchain, one can call its functions and execute them successfully, provided they have the permission to do so. Because these calls originate <strong>outside of the blockchain runtime</strong>, such transactions are referred to as <strong>extrinsics</strong>.</p>
+</blockquote>
+<h3 id="fault"><a class="header" href="#fault">Fault</a></h3>
+<p>A fault happens when a proof is not submitted within the <a href="#proving-period">proving period</a>.
+For a sector to stop being considered in proving periods, it needs to be declared as faulty
+— indicating the storage provider is aware of the faulty sector and will be working to restore it.
+If a sector is faulty for too long, it will be terminated and the deal will be slashed.</p>
+<p>For more information on faults, you can read the original Filecoin specification:
+<a href="https://spec.filecoin.io/#section-glossary.fault">https://spec.filecoin.io/#section-glossary.fault</a></p>
+<h3 id="full-node"><a class="header" href="#full-node">Full Node</a></h3>
+<p>A device (computer) that fully downloads and stores the entire blockchain of the parachain, validating and relaying
+transactions and blocks within the network. It is one of the <a href="#node">node</a> types.</p>
+<h3 id="invulnerable"><a class="header" href="#invulnerable">Invulnerable</a></h3>
+<p>A status assigned to certain <a href="#collator">collators</a> that makes them exempt from being removed from the active set of
+<a href="#collator">collators</a>.</p>
+<h3 id="node"><a class="header" href="#node">Node</a></h3>
+<p>A device (computer) that participates in running the protocol software of a decentralized network; in other words, a
+participant of the blockchain network who runs it locally.</p>
+<h3 id="parachain"><a class="header" href="#parachain">Parachain</a></h3>
+<p>A parachain is a specialized blockchain that runs in parallel to other parachains within a larger network, benefiting
+from shared security and interoperability, and can be validated by the validators of the <a href="#relay-chain">Relay Chain</a>.</p>
+<h3 id="partition"><a class="header" href="#partition">Partition</a></h3>
+<p>Partitions are logical groups<sup class="footnote-reference"><a href="#logical">1</a></sup> of sectors to be proven together.</p>
+<p>The number of sectors to be proven at once is 2349<sup class="footnote-reference"><a href="#computational_limit">2</a></sup>, as defined by Filecoin.</p>
+<p>For more information on partitions, you can read the original Filecoin specification:
+<a href="https://spec.filecoin.io/#section-algorithms.pos.post.constants--terminology">https://spec.filecoin.io/#section-algorithms.pos.post.constants--terminology</a></p>
+<div class="footnote-definition" id="logical"><sup class="footnote-definition-label">1</sup>
+<p>They do not reflect the physical storage state, only existing in the context of deadlines and proofs.</p>
+</div>
+<div class="footnote-definition" id="computational_limit"><sup class="footnote-definition-label">2</sup>
+<p>Filecoin defined the limit at 2349 to cope with computational limits, <a href="https://spec.filecoin.io/#section-algorithms.pos.post.windowpost">as described in the specification</a>.</p>
+</div>
+<h3 id="planck"><a class="header" href="#planck">Planck</a></h3>
+<p>From the <a href="https://wiki.polkadot.network/docs/learn-DOT#the-planck-unit">Polkadot Wiki</a>:</p>
+<blockquote>
+<p>The smallest unit for the account balance on Substrate based blockchains (Polkadot, Kusama, etc.) is Planck (a reference to Planck Length, the smallest possible distance in the physical Universe).
+You can compare DOT's Planck to BTC's Satoshi or ETH's Wei. Polkadot's native token DOT equals to \(10^{10}\) Planck and Kusama's native token KSM equals to \(10^{12}\) Planck.</p>
+</blockquote>
+<h3 id="polkadot"><a class="header" href="#polkadot">Polkadot</a></h3>
+<p>“Layer-0” blockchain platform designed to facilitate interoperability, scalability and security among different
+“Layer-1” blockchains, called <a href="#parachain">parachains</a>.</p>
+<h2 id="proofs"><a class="header" href="#proofs">Proofs</a></h2>
+<p>Cryptographic evidence used to verify that storage providers have received, are storing, and are continuously
+maintaining data as promised.</p>
+<p>There are two main types of proofs:</p>
+<ul>
+<li>
+<p><a id="porep"></a> <strong>Proof-of-Replication (PoRep):</strong> In order to register a sector with the network, the
+sector has to be sealed. Sealing is a computation-heavy process that produces a unique representation of the data in
+the form of a proof, called Proof-of-Replication or PoRep.</p>
+</li>
+<li>
+<p><a id="post"></a> <strong>Proof-of-Spacetime (PoSt):</strong> Used to verify that the storage provider continues to store the
+data over time. <a href="#storage-provider">Storage providers</a> must periodically generate and submit proofs to show that they
+are still maintaining the stored data as promised.</p>
+</li>
+</ul>
+<h3 id="proving-period"><a class="header" href="#proving-period">Proving Period</a></h3>
+<p>A proving period is when storage providers' commitments are audited,
+and they must prove they are still storing the data from the deals they signed</p>
+<ul>
+<li>the average period for proving all sectors maintained by a provider (default set to 24 hours).</li>
+</ul>
+<p>For more information on proving periods, you can read the original Filecoin specification:</p>
+<ul>
+<li>Proving periods in the context of Window Proof of Spacetime — <a href="https://spec.filecoin.io/#section-algorithms.pos.post.windowpost">https://spec.filecoin.io/#section-algorithms.pos.post.windowpost</a></li>
+<li>Proving periods in the context of Filecoin's system design — <a href="https://spec.filecoin.io/#section-algorithms.pos.post.design">https://spec.filecoin.io/#section-algorithms.pos.post.design</a></li>
+</ul>
+<h3 id="relay-chain"><a class="header" href="#relay-chain">Relay Chain</a></h3>
+<p>The Relay Chain in <a href="#polkadot">Polkadot</a> is the central chain (blockchain) responsible for the network's shared
+security, consensus, and cross-chain interoperability.</p>
+<h3 id="sector"><a class="header" href="#sector">Sector</a></h3>
+<p>The sector is the default unit of storage that providers put in the network.
+A sector is a contiguous array of bytes on which a storage provider puts together, seals,and performs Proofs of Spacetime on.
+Storage providers store data on the network in fixed-size sectors.</p>
+<p>For more information on sectors, you can read the original Filecoin specification:
+<a href="https://spec.filecoin.io/#section-glossary.sector">https://spec.filecoin.io/#section-glossary.sector</a></p>
+<h3 id="session"><a class="header" href="#session">Session</a></h3>
+<p>A predefined period during which a set of <a href="#collator">collators</a> remains constant.</p>
+<h3 id="slashing"><a class="header" href="#slashing">Slashing</a></h3>
+<p>The process of penalizing network participants, including <a href="#validators">validators</a>, <a href="#nominators">nominators</a>,
+and <a href="#collator">collators</a>, for various protocol violations. These violations could include producing invalid blocks,
+equivocation (double signing), inability of the <a href="#storage-provider">Storage Provider</a> to <a href="#proofs">prove</a> that the data
+is stored and maintained as promised, or other malicious activities. As a result of slashing, participants may face a
+reduction in their <a href="#staking">staked</a> funds or other penalties depending on the severity of the violation.</p>
+<h3 id="slot-auction"><a class="header" href="#slot-auction">Slot Auction</a></h3>
+<p>To secure a <a href="#parachain">parachain</a> slot, a project must win an auction by <a href="#term-to-avoid-pledge">pledging</a> (locking
+up) a significant amount of DOT tokens. These tokens are used as <a href="#collateral">collateral</a> to secure the slot for a
+specified period. Once the slot is secured, the project can launch and operate its <a href="#parachain">parachain</a>.</p>
+<h3 id="staking"><a class="header" href="#staking">Staking</a></h3>
+<p>Staking is when DOT holders lock up their tokens to support the network's security and operations. In
+return, they can earn rewards. There are two main roles involved in staking:</p>
+<ul>
+<li>
+<p><a name="validators"></a><strong>Validators</strong>:
+Validators produce new blocks, validate transactions, and secure the network.
+They are selected based on their stake and performance.
+Validators must run a <a href="#node">node</a> and have the technical capability to maintain it.</p>
+</li>
+<li>
+<p><a name="nominators"></a><strong>Nominators</strong>: Nominators support the network by backing (nominating) validators they trust
+with their DOT tokens. Nominators share in the rewards earned by the validators they support. This allows DOT holders
+who don't want to run a validator node to still participate in the network's security and earn rewards.</p>
+</li>
+</ul>
+<p>Our parachain will use staking to back up the <a href="#collator">collators</a> similarly to "Nominators".
+In this regard, "Nominators" will fall to <a href="#storage-provider">Storage Providers</a>,
+while " Validators" will be assigned to <a href="#collator">Collators</a> accordingly.</p>
+<h3 id="storage-provider"><a class="header" href="#storage-provider">Storage Provider</a></h3>
+<p>The user who offers storage space on their devices to store data for others.</p>
+<h3 id="storage-user"><a class="header" href="#storage-user">Storage User</a></h3>
+<p><strong><em>Aka Client:</em></strong> The user who initiates storage deals by providing data to be stored on the network by the <a href="#storage-provider">Storage
+Provider</a>.</p>
+<h3 id="system-parachain"><a class="header" href="#system-parachain">System Parachain</a></h3>
+<p><a href="https://wiki.polkadot.network/docs/learn-system-chains">System-level chains</a> move functionality from
+the <a href="#relay-chain">Relay Chain</a> into <a href="#parachain">parachains</a>, minimizing the administrative use of
+the <a href="#relay-chain">Relay Chain</a>. For example, a governance <a href="#parachain">parachain</a> could move all
+the <a href="#polkadot">Polkadot</a> governance processes from the <a href="#relay-chain">Relay Chain</a> into a <a href="#parachain">parachain</a>.</p>
+<h2 id="anti-glossary"><a class="header" href="#anti-glossary">Anti-Glossary</a></h2>
+<p>This section lists terms that should not be used within the project, along with preferred alternatives.</p>
+<h3 id="term-to-avoid-miner"><a class="header" href="#term-to-avoid-miner">Term to Avoid: Miner</a></h3>
+<p>In <a href="https://spec.filecoin.io/#section-glossary.filecoin">Filecoin</a>, a "Lotus Miner" is responsible for storage-related
+operations, such as sealing
+sectors (<a href="https://spec.filecoin.io/#section-algorithms.pos.porep">PoRep (Proof-of-Replication)</a>), proving storage
+(<a href="https://spec.filecoin.io/#section-algorithms.pos.post">PoSt (Proof-of-Spacetime)</a>), and participating in
+the <a href="https://spec.filecoin.io/#section-glossary.filecoin">Filecoin</a> network as a storage miner.</p>
+<p><strong>Reason</strong>: In the <a href="https://spec.filecoin.io/#section-glossary.filecoin">Filecoin</a> network,
+the miner simultaneously plays the roles of <a href="#storage-provider">storage provider</a> and block producer.
+However, this term cannot be used in the <a href="#polkadot">Polkadot</a> ecosystem because there are no block producers in <a href="#parachain">parachains</a>;
+the <a href="#relay-chain">Relay Chain</a> is responsible for block production. <a href="#parachain">Parachains</a> can only prepare block
+candidates via the <a href="#collator">Collator</a> node and pass them to the <a href="#relay-chain">Relay Chain</a>.</p>
+<h3 id="term-to-avoid-pledge"><a class="header" href="#term-to-avoid-pledge">Term to Avoid: Pledge</a></h3>
+<p>It's better to apply this term within its proper context rather than avoiding it altogether. It's easy to confuse it
+with <a href="#staking">staking</a>, but they have distinct meanings.</p>
+<p><strong>Reason</strong>: Pledging generally refers to locking up tokens as <a href="#collateral">collateral</a> to participate in certain
+network activities or services like: <a href="#slot-auction">Parachain Slot Auctions</a> and <a href="#crowdloan">Crowdloans</a>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="pallets/storage-provider.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="pallets/storage-provider.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

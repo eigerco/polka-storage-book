@@ -1,0 +1,2130 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Polka Storage</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="getting-started/index.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="getting-started/local-testnet.html"><strong aria-hidden="true">2.1.</strong> Local Testnet - Polka Storage Parachain</a></li><li class="chapter-item expanded "><a href="getting-started/car-server.html"><strong aria-hidden="true">2.2.</strong> CAR server</a></li><li class="chapter-item expanded "><a href="getting-started/demo.html"><strong aria-hidden="true">2.3.</strong> Real-world use case demo</a></li></ol></li><li class="chapter-item expanded "><a href="storage-provider-cli/index.html"><strong aria-hidden="true">3.</strong> Polka Storage Provider CLI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="storage-provider-cli/storage.html"><strong aria-hidden="true">3.1.</strong> storage</a></li><li class="chapter-item expanded "><a href="storage-provider-cli/wallet.html"><strong aria-hidden="true">3.2.</strong> wallet</a></li></ol></li><li class="chapter-item expanded "><a href="storagext-cli/index.html"><strong aria-hidden="true">4.</strong> Storagext CLI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="storagext-cli/market.html"><strong aria-hidden="true">4.1.</strong> market</a></li><li class="chapter-item expanded "><a href="storagext-cli/storage-provider.html"><strong aria-hidden="true">4.2.</strong> storage-provider</a></li><li class="chapter-item expanded "><a href="storagext-cli/system.html"><strong aria-hidden="true">4.3.</strong> system</a></li></ol></li><li class="chapter-item expanded "><a href="pallets/index.html"><strong aria-hidden="true">5.</strong> Pallets</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="pallets/market.html"><strong aria-hidden="true">5.1.</strong> Market</a></li><li class="chapter-item expanded "><a href="pallets/storage-provider.html"><strong aria-hidden="true">5.2.</strong> Storage Provider</a></li></ol></li><li class="chapter-item expanded "><a href="glossary.html"><strong aria-hidden="true">6.</strong> Glossary</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Polka Storage</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>Welcome to the Polka Storage project!</p>
+<p>This project aims to deliver a Polkadot-native system parachain for data storage.</p>
+<p>Since the Referendum approval, we've been busy developing the parachain,
+and this is our deliverable for Phase 1, composed of:</p>
+<ul>
+<li>Filecoin actor ports:
+<ul>
+<li><a href="./pallets/storage-provider.html">Storage Provider</a> — excluding proving mechanisms</li>
+<li><a href="./pallets/market.html">Market</a></li>
+</ul>
+</li>
+<li><a href="./storage-provider-cli/storage.html">CAR file conversion server</a></li>
+<li>Dedicated CLIs
+<ul>
+<li><a href="./storage-provider-cli/storage.html"><code>storage-provider-cli</code></a> to generate keys and test our CARv2 Rust implementation!</li>
+<li><a href="./storagext-cli/index.html"><code>storagext-cli</code></a> (shown below) to take the parachain for a spin!</li>
+</ul>
+</li>
+</ul>
+<p>
+    <img
+        src="images/showcase/cli_basic.gif"
+        alt="Polka Storage CLI tooling showcase">
+</p>
+<p>The following on-chain logic has been implemented:</p>
+<ul>
+<li>Keeping track of <a href="./glossary.html#storage-provider">Storage Providers</a>,</li>
+<li><a href="./pallets/market.html#publish_storage_deals">Publishing</a> Market Deals on-chain,</li>
+<li><a href="./pallets/market.html#add_balance">Investing</a> tokens into the Storage Market,</li>
+<li><a href="./pallets/market.html#settle_deal_payments">Receiving</a> funds after completing a deal,</li>
+<li><a href="./pallets/storage-provider.html#pre_commit_sector">Commiting</a> to the Storage and <a href="./pallets/storage-provider.html#prove_commit_sector">Proving</a> the storage,</li>
+<li><a href="./pallets/storage-provider.html#prove_commit_sector">Declaring</a> failures to deliver committed storage and <a href="./pallets/storage-provider.html#declaring-storage-faults-recovered">Recovering</a> from it,</li>
+<li><a href="./pallets/storage-provider.html#submit_windowed_post">Continuously proving</a> that the promise of storage has been kept up <a href="./glossary.html#proofs">PoSt proof</a>,</li>
+<li><a href="./pallets/storage-provider.html#events">Punishing</a> for failing to provide storage.</li>
+</ul>
+<p>We present a complete real-world scenario <a href="./getting-started/demo.html">(which you can run on your own!)</a> in which a <a href="./glossary.html#storage-provider">Storage Provider</a> and a <a href="./glossary.html#storage-user">Storage User</a> negotiate a deal, perform all the steps necessary to start the storage and then receive rewards (or punishments) for making it happen.</p>
+<p>You can read more about the project's genesis in:</p>
+<ul>
+<li>Treasury Proposal — <a href="https://polkadot.polkassembly.io/post/2107">https://polkadot.polkassembly.io/post/2107</a></li>
+<li>OpenGov Referendum — <a href="https://polkadot.polkassembly.io/referenda/494">https://polkadot.polkassembly.io/referenda/494</a></li>
+<li>Research Report — <a href="https://github.com/eigerco/polkadot-native-storage/blob/main/doc/report/polkadot-native-storage-v1.0.0.pdf">https://github.com/eigerco/polkadot-native-storage/blob/main/doc/report/polkadot-native-storage-v1.0.0.pdf</a></li>
+<li>Polkadot Forum News Post — <a href="https://forum.polkadot.network/t/polkadot-native-storage/4551">https://forum.polkadot.network/t/polkadot-native-storage/4551</a></li>
+</ul>
+<hr />
+<p>
+    <a href="https://eiger.co">
+        <img
+            src="images/logo.svg"
+            alt="Eiger Oy"
+            style="height: 50px; display: block; margin-left: auto; margin-right: auto; width: 50%;">
+    </a>
+</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
+<p>This chapter will guide you through setting up, running, and trying out the components that have been implemented so far.</p>
+<h2 id="system-requirements"><a class="header" href="#system-requirements">System Requirements</a></h2>
+<p>Before proceeding with the setup, please ensure your system meets the following requirements:</p>
+<ul>
+<li><strong>OS</strong>: Linux x86_64/MacOS ARM x64</li>
+<li><strong>RAM</strong>: Minimum 8GB, recommended 16GB or more</li>
+</ul>
+<h2 id="guides"><a class="header" href="#guides">Guides</a></h2>
+<ul>
+<li><a href="getting-started/local-testnet.html"><em>Local Testnet - Polka Storage Parachain</em></a> — Covers how to setup a local testnet for the Polka Storage parachain, using Zombienet.</li>
+<li><a href="getting-started/car-server.html"><em>CAR server</em></a> — Covers how to setup and run the CARv2 server, which transforms files into <code>.car</code> archives.</li>
+<li><a href="getting-started/demo.html"><em>Real-world use case demo</em></a> — Covers a real-world use case, adding balances, submitting sectors, and more!</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="local-testnet---polka-storage-parachain"><a class="header" href="#local-testnet---polka-storage-parachain">Local Testnet - Polka Storage Parachain</a></h1>
+<p>This guide will help you set up a local parachain network using zombienet.
+At the end, we will have three nodes: Alice, Bob and Charlie.
+Alice and Bob will be running Polkadot relay chain nodes as validators,
+and Charlie will run a relay chain and parachain node.
+Charlie will be our contact point to the parachain network.</p>
+<h2 id="native-binaries"><a class="header" href="#native-binaries">Native Binaries</a></h2>
+<p>You can download our latest releases's binaries directly and run them on your machine without additional dependencies.
+We support <code>Linux x86_64</code> and <code>MacOS ARM x64</code>. The commands below will download:</p>
+<ul>
+<li><a href="https://github.com/paritytech/polkadot-sdk/releases">Relay Chain</a> binaries (<code>polkadot</code>, <code>polkadot-prepare-worker</code>, <code>polkadot-execute-worker</code>),</li>
+<li>Polka Storage Parachain binary (<code>polka-storage-node</code>),</li>
+<li><a href="getting-started/../storage-provider-cli/index.html">Polka Storage Provider</a> internal node (<code>polka-storage-provider</code>),</li>
+<li><a href="getting-started/../storagext-cli/">CLI for interacting with the parachain</a> (<code>storagext-cli</code>),</li>
+<li><a href="https://paritytech.github.io/zombienet/install.html">zombienet</a> to spawn local testnets and orchestrate them (<code>zombienet</code>),</li>
+<li>Polka Storage Parachain out-of-the-box zombienet's configuration (<code>polka-storage-testnet.toml</code>).</li>
+</ul>
+<h3 id="linux-x86_64"><a class="header" href="#linux-x86_64">Linux x86_64</a></h3>
+<ol>
+<li>Download the binaries:</li>
+</ol>
+<pre><code class="language-bash">wget https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-v1.13.0/polkadot
+wget https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-v1.13.0/polkadot-prepare-worker
+wget https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-v1.13.0/polkadot-execute-worker
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/linux_x86-64/polka-storage-node
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/linux_x86-64/polka-storage-provider
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/linux_x86-64/storagext-cli
+wget https://github.com/paritytech/zombienet/releases/download/v1.3.106/zombienet-linux-x64 -O zombienet
+</code></pre>
+<ol start="2">
+<li>Setup permissions:</li>
+</ol>
+<pre><code class="language-bash">chmod +x zombienet polka-storage-node polka-storage-provider storagext-cli polkadot polkadot-prepare-worker polkadot-execute-worker
+</code></pre>
+<ol start="3">
+<li>Run <code>zombienet</code>:</li>
+</ol>
+<pre><code class="language-bash">export PATH=$(pwd):$PATH
+
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/polka-storage-testnet.toml
+zombienet -p native spawn polka-storage-testnet.toml
+</code></pre>
+<h3 id="macos-arm"><a class="header" href="#macos-arm">MacOS ARM</a></h3>
+<ol>
+<li>Download the binaries:</li>
+</ol>
+<pre><code class="language-bash">wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polkadot
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polkadot-prepare-worker
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polkadot-execute-worker
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polka-storage-node
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polka-storage-provider
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/storagext-cli
+wget https://github.com/paritytech/zombienet/releases/download/v1.3.106/zombienet-macos-arm64 -O zombienet
+</code></pre>
+<ol start="2">
+<li>Setup permissions &amp; de-quarantine:</li>
+</ol>
+<pre><code class="language-bash">chmod +x zombienet polka-storage-node polka-storage-provider storagext-cli polkadot polkadot-prepare-worker polkadot-execute-worker
+xattr -d com.apple.quarantine zombienet polka-storage-node polka-storage-provider storagext-cli polkadot polkadot-prepare-worker polkadot-execute-worker
+</code></pre>
+<div class="warning">
+If, when running the <code>xattr</code> command, it outputs <code>No such attr: com.apple.quarantine</code>, there's nothing to worry about. It means the downloaded binaries were not quarantined.
+</div>
+<ol start="3">
+<li>Run <code>zombienet</code>:</li>
+</ol>
+<pre><code class="language-bash">export PATH=$(pwd):$PATH
+
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/polka-storage-testnet.toml
+zombienet -p native spawn polka-storage-testnet.toml
+</code></pre>
+<p>You can easily access the parachain using the Polkadot.js Apps interface by clicking on this link:
+<a href="https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:42069#/explorer">https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:42069#/explorer</a></p>
+<p>Where you should be greeted by a page like this:</p>
+<p>
+  <a href="https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:42069#/explorer">
+    <img src="getting-started/../images/polkadot_substrate_portal.png" alt="Polkadot/Subtrate Portal">
+  </a>
+</p>
+<p>Or you can interact with the chain via <a href="getting-started/../storagext-cli/index.html"><code>storagext-cli</code></a>, for example:</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider register Alice
+</code></pre>
+<h2 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h2>
+<div class="warning">
+Docker Images were only published on x86_64 platforms! They won't work on Kubernetes on MacOS.
+</div>
+<h3 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h3>
+<ul>
+<li><a href="https://github.com/paritytech/zombienet/releases/tag/v1.3.106">zombienet v1.3.106</a> - cli tool to easily spawn ephemeral Polkadot/Substrate networks and perform tests against them.</li>
+<li><a href="https://minikube.sigs.k8s.io/docs/start/">minikube</a> — to run the parachain nodes</li>
+<li>a configured <a href="https://kubernetes.io/docs/tasks/tools/#kubectl">kubectl</a> — is used to set up the required kubernetes resources by <code>zombienet</code>
+<ul>
+<li><a href="https://minikube.sigs.k8s.io/docs/handbook/kubectl/">https://minikube.sigs.k8s.io/docs/handbook/kubectl/</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/tools/#kubectl">https://kubernetes.io/docs/tasks/tools/#kubectl</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="start-up-the-kubernetes-cluster"><a class="header" href="#start-up-the-kubernetes-cluster">Start up the Kubernetes cluster</a></h3>
+<p>Using <code>minikube</code>, you can start the cluster with the following command:</p>
+<pre><code>minikube start
+</code></pre>
+<p>You can read more about <code>minikube</code> on its <a href="https://minikube.sigs.k8s.io/docs/handbook/controls/">Getting Started</a> page.</p>
+<h3 id="running-the-parachain"><a class="header" href="#running-the-parachain">Running the Parachain</a></h3>
+<ol>
+<li>Create a <code>local-kube-testnet.toml</code> file on your machine with the following content.</li>
+</ol>
+<pre><code class="language-toml">[settings]
+image_pull_policy = "IfNotPresent"
+
+[relaychain]
+chain = "rococo-local"
+default_args = ["--detailed-log-output", "-lparachain=debug,xcm=trace,runtime=trace"]
+default_image = "docker.io/parity/polkadot:v1.13.0"
+
+[[relaychain.nodes]]
+name = "alice"
+validator = true
+
+[[relaychain.nodes]]
+name = "bob"
+validator = true
+
+[[parachains]]
+cumulus_based = true
+
+# We need to use a Parachain of an existing System Chain (https://github.com/paritytech/polkadot-sdk/blob/master/polkadot/runtime/rococo/src/xcm_config.rs).
+# The reason: being able to get native DOTs from Relay Chain to Parachain via XCM Teleport.
+# We'll have a proper Parachain ID in the *future*, but for now, let's stick to 1000 (which is AssetHub and trusted).
+id = 1000
+
+# Run Charlie as parachain collator
+[[parachains.collators]]
+args = ["--detailed-log-output", "-lparachain=debug,xcm=trace,runtime=trace"]
+command = "polka-storage-node"
+image = "polkadotstorage.azurecr.io/parachain-node:0.1.0"
+name = "charlie"
+rpc_port = 42069
+validator = true
+</code></pre>
+<ol start="2">
+<li>Run the Parachain, and spawn the zombienet testnet in the Kubernetes cluster:</li>
+</ol>
+<pre><code>zombienet -p kubernetes spawn local-kube-testnet.toml
+</code></pre>
+<details>
+<summary>Click here to show the example output.</summary>
+<pre><code>│ /ip4/10.1.0.16/tcp/30333/ws/p2p/12D3KooWPKzmmE2uYgF3z13xjpbFTp63g9dZFag8pG6MgnpSLF4S                                   │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+         Warn: Tracing collator service doesn't exist
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                                       Network launched 🚀🚀                                                       │
+├──────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Namespace                    │ zombie-1cecb9b5e0f9a14208f2fbefd9384490                                                            │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Provider                     │ kubernetes                                                                                         │
+├──────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                         Node Information                                                          │
+├──────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Name                         │ alice                                                                                              │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Direct Link                  │ https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A34341#/explorer                           │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Prometheus Link              │ http://127.0.0.1:35537/metrics                                                                     │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Log Cmd                      │ kubectl logs -f alice -c alice -n zombie-1cecb9b5e0f9a14208f2fbefd9384490                          │
+├──────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                         Node Information                                                          │
+├──────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Name                         │ bob                                                                                                │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Direct Link                  │ https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A44459#/explorer                           │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Prometheus Link              │ http://127.0.0.1:43841/metrics                                                                     │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Log Cmd                      │ kubectl logs -f bob -c bob -n zombie-1cecb9b5e0f9a14208f2fbefd9384490                              │
+├──────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                         Node Information                                                          │
+├──────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Name                         │ charlie                                                                                            │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Direct Link                  │ https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A42069#/explorer                           │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Prometheus Link              │ http://127.0.0.1:42675/metrics                                                                     │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Log Cmd                      │ kubectl logs -f charlie -c charlie -n zombie-1cecb9b5e0f9a14208f2fbefd9384490                      │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Parachain ID                 │ 1000                                                                                               │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ ChainSpec Path               │ /tmp/zombie-1cecb9b5e0f9a14208f2fbefd9384490_-29755-WOCdKtq9zPGA/1000-rococo-local.json            │
+└──────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+</details>
+<h3 id="verifying-the-setup"><a class="header" href="#verifying-the-setup">Verifying the Setup</a></h3>
+<p>Check if all zombienet pods were started successfully:</p>
+<p><code>kubectl get pods --all-namespaces</code></p>
+<details>
+<summary>Click here to show the example output.</summary>
+<pre><code>...
+zombie-01b7920d650c18d3d78f75fd8b0978af   alice                              1/1     Running     0               77s
+zombie-01b7920d650c18d3d78f75fd8b0978af   bob                                1/1     Running     0               62s
+zombie-01b7920d650c18d3d78f75fd8b0978af   charlie                            1/1     Running     0               49s
+zombie-01b7920d650c18d3d78f75fd8b0978af   fileserver                         1/1     Running     0               2m28s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp                               0/1     Completed   0               2m25s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp-1                             0/1     Completed   0               2m25s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp-2                             0/1     Completed   0               2m15s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp-3                             0/1     Completed   0               2m1s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp-4                             0/1     Completed   0               114s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp-5                             0/1     Completed   0               91s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp-collator                      0/1     Completed   0               104s
+</code></pre>
+</details>
+<h3 id="accessing-the-parachain"><a class="header" href="#accessing-the-parachain">Accessing the Parachain</a></h3>
+<p>You can easily access the parachain using the Polkadot.js Apps interface by clicking on this link:</p>
+<p><a href="https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A42069#/explorer">https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A42069#/explorer</a></p>
+<p>This link will automatically connect to Charlie's node running on your local machine at port <code>42069</code>. The port is configured in <code>local-kube-testnet.toml</code> under <code>rpc_port</code> for Charlie's node.</p>
+<h2 id="zombienet-configuration-breakdown"><a class="header" href="#zombienet-configuration-breakdown">Zombienet Configuration Breakdown</a></h2>
+<p>During the setup, you either download a file in the third step of <a href="getting-started/local-testnet.html#linux-x86_64">Linux</a>/<a href="getting-started/local-testnet.html#macos-arm">MacOS</a> — <code>polka-storage-testnet.toml</code> —
+or copy it from the first step of <a href="getting-started/local-testnet.html#running-the-parachain">Running the parachain</a>.</p>
+<h3 id="similarities"><a class="header" href="#similarities">Similarities</a></h3>
+<p>The two files share most of the contents, so we'll start by covering their similarities.
+For more details, you should refer to the <a href="https://paritytech.github.io/zombienet/network-definition-spec.html"><code>zombienet</code> documentation</a>:</p>
+<h4 id="relaychain"><a class="header" href="#relaychain"><code>relaychain</code></a></h4>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>chain</code></td><td>The relaychain name</td></tr>
+<tr><td><code>default_args</code></td><td>The default arguments passed to the <code>command</code></td></tr>
+<tr><td><code>default_command</code></td><td>The default command to run the relaychain</td></tr>
+<tr><td><code>nodes</code></td><td>List of tables defining the nodes to run</td></tr>
+</tbody></table>
+</div>
+<h5 id="nodes"><a class="header" href="#nodes"><code>nodes</code></a></h5>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>name</code></td><td>The node name</td></tr>
+<tr><td><code>validator</code></td><td>Whether the node is a validator or not</td></tr>
+</tbody></table>
+</div>
+<h4 id="parachains"><a class="header" href="#parachains"><code>parachains</code></a></h4>
+<p>A list of tables defining multiple parachains, in our case, we only care for our own parachain.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>cumulus_based</code></td><td>Whether to use <code>cumulus</code> based generation</td></tr>
+<tr><td><code>id</code></td><td>The parachain ID, we're using <code>1000</code> as a placeholder for now</td></tr>
+<tr><td><code>collators</code></td><td>List of tables defining the collators</td></tr>
+</tbody></table>
+</div>
+<h5 id="collators"><a class="header" href="#collators"><code>collators</code></a></h5>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>args</code></td><td>The arguments passed to the <code>command</code></td></tr>
+<tr><td><code>command</code></td><td>The command to run the collator</td></tr>
+<tr><td><code>name</code></td><td>The collator name</td></tr>
+<tr><td><code>validator</code></td><td>Whether the collator is also a validator</td></tr>
+</tbody></table>
+</div>
+<h3 id="differences"><a class="header" href="#differences">Differences</a></h3>
+<p>The difference between them lies in the usage of container configurations:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>image_pull_policy</code></td><td>Defines when <code>zombienet</code> should pull an image; read more about it in the <a href="https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy">Kubernetes documentation</a></td></tr>
+<tr><td><code>image</code></td><td>Defines which image to pull</td></tr>
+<tr><td><code>ws_port</code>/<code>rpc_port</code></td><td>Depending on the type of configuration (Native or Kubernetes), this variable sets the port for the collator RPC service</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="car-server"><a class="header" href="#car-server">CAR server</a></h1>
+<p>It is an HTTP server that converts arbitrary content into a <a href="https://ipld.io/specs/transport/car/carv2/">CARv2</a> file and serves it over HTTP - supporting the latest CARv2 format,
+which is not yet entirely supported by other crates in the Rust ecosystem.
+Following the following steps, you can run the server locally and upload and download files.</p>
+<div class="warning">
+The server is a proof of concept, showcasing our CARv2 implementation, but it is not intended to be used in production.
+Anyone can upload and download files without authentication or authorization.
+</div>
+<h2 id="start-the-server"><a class="header" href="#start-the-server">Start the server</a></h2>
+<ol>
+<li>Create a Docker volume to store uploaded files:</li>
+</ol>
+<p><code>docker volume create storage_provider</code></p>
+<ol start="2">
+<li>Start the server:</li>
+</ol>
+<pre><code>docker run \
+    -p 127.0.0.1:9000:9000 \
+    --mount source=storage_provider,destination=/app/uploads \
+    polkadotstorage.azurecr.io/polka-storage-provider:0.1.0 storage \
+        --listen-addr 0.0.0.0:9000
+</code></pre>
+<ul>
+<li><code>-p 127.0.0.1:9000:9000</code>: Maps port <code>9000</code> on the localhost to port <code>9000</code> on the container.</li>
+<li><code>--mount source=storage_provider,destination=/app/uploads</code>: Mounts the <code>storage_provider</code> volume to <code>/app/uploads</code> inside the container.</li>
+<li><code>polkadotstorage.azurecr.io/polka-storage-provider:0.1.0 storage</code>: Runs the <code>polkadotstorage.azurecr.io/polka-storage-provider:0.1.0</code> image with the <code>storage</code> command.</li>
+<li><code>--listen-addr 0.0.0.0:9000</code>: Configures the server to listen on all available network interfaces.</li>
+</ul>
+<h2 id="verifying-the-setup-1"><a class="header" href="#verifying-the-setup-1">Verifying the Setup</a></h2>
+<p>After setting up and starting the CAR server, it's essential to verify that everything works correctly.
+Follow these steps to ensure your setup works as expected:</p>
+<ol>
+<li>
+<p>Upload a test file using the instructions in the <a href="getting-started/../storage-provider-cli/storage.html#upload-a-file">Upload a file</a> section. Make sure to note the CID returned by the server.</p>
+</li>
+<li>
+<p>Download the CAR file using the CID you received, following the steps in the <a href="getting-started/../storage-provider-cli/storage.html#download-the-car-file">Download the CAR File</a> section.</p>
+</li>
+<li>
+<p>[Optional] Verify the contents of the downloaded CAR file. You can use <a href="https://github.com/ipld/go-car/tree/master/cmd/car#install">go-car</a>'s <code>inspect</code> command. Like so.</p>
+<pre><code class="language-bash">car inspect &lt;target_file&gt;
+</code></pre>
+<p>The user can use <code>debug</code> for more detailed output:</p>
+<pre><code class="language-bash">car debug &lt;target_file&gt;
+</code></pre>
+<p>If the user desires, they can extract the contents of the file:</p>
+<pre><code class="language-bash">car extract &lt;target_file&gt;
+</code></pre>
+</li>
+</ol>
+<p>If you can successfully upload a file, receive a CID, download the corresponding CAR file, and verify its contents, your CAR server setup is working correctly.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="real-world-use-case-demo"><a class="header" href="#real-world-use-case-demo">Real-world use case demo</a></h1>
+<div class="warning">
+Before reading this guide,
+please ensure you've followed the <a href="getting-started/./local-testnet.html">local testnet</a> guide and that a working testnet is running!
+</div>
+<p>A high-level overview with diagrams of the process described below can be found in <a href="getting-started/../pallets/index.html">Pallets section</a>.</p>
+<h2 id="1-publishing-a-deal"><a class="header" href="#1-publishing-a-deal">1. Publishing a deal</a></h2>
+<p>Charlie heard he could provide storage to people worldwide and earn some tokens,
+so he decided to register as a <a href="getting-started/../glossary.html">Storage Provider</a>.</p>
+<pre><code class="language-bash">$ storagext-cli --sr25519-key "//Charlie" storage-provider register Charlie
+[0xd14d…4b6a] Storage Provider Registered: { owner: 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y, info: Storage Provider Info: { peer_id: 3ZAB4sc5BS, window_post_proof_type: StackedDRGWindow2KiBV1P1, sector_size: _2KiB, window_post_partition_sectors: 2 }, proving_period_start: 21 }
+</code></pre>
+<img src="getting-started/../images/demo/registered-charlie.PNG">
+<p>Alice is a <a href="getting-started/../glossary.html#storage-user">Storage User</a> and wants to store an image of her lovely Husky (<code>husky.jpg</code>) in the Polka Storage <a href="getting-started/../glossary.html#parachain">parachain</a>.</p>
+<p>Alice knows<sup class="footnote-reference"><a href="#no-cid">1</a></sup> that she needs to get a <a href="https://github.com/multiformats/cid">CID</a> of the image,
+so she <a href="getting-started/../storage-provider-cli/storage.html#upload-a-file">uploaded it to the CAR server</a>
+and received the CID: <code>bafybeihxgc67fwhdoxo2klvmsetswdmwwz3brpwwl76qizbsl6ypro6vxq</code>.</p>
+<p>Alice heard somewhere<sup class="footnote-reference"><a href="#no-sp-discovery">2</a></sup> in the hallways of her favourite gym that Charlie is a Storage Provider.
+She calls him (off-chain), and they negotiate a deal:</p>
+<p><code>husky-deal.json</code></p>
+<pre><code class="language-json">[
+  {
+    "piece_cid": "bafybeihxgc67fwhdoxo2klvmsetswdmwwz3brpwwl76qizbsl6ypro6vxq",
+    "piece_size": 1278,
+    "client": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+    "provider": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+    "label": "My lovely Husky (husky.jpg)",
+    "start_block": 25,
+    "end_block": 50,
+    "storage_price_per_block": 1000000000,
+    "provider_collateral": 12500000000,
+    "state": "Published"
+  }
+]
+</code></pre>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Value</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>piece_cid</code></td><td><code>bafybeihxgc67fwhdoxo2klvmsetswdmwwz3brpwwl76qizbsl6ypro6vxq</code></td><td>The submitted file's CID</td></tr>
+<tr><td><code>piece_size</code></td><td><code>1278</code></td><td>The submitted file's size</td></tr>
+<tr><td><code>client</code></td><td><a href="https://docs.substrate.io/reference/glossary/#dev-phrase"><code>//Alice</code></a> or <code>5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY</code></td><td>The client's address</td></tr>
+<tr><td><code>provider</code></td><td><a href="https://docs.substrate.io/reference/glossary/#dev-phrase"><code>//Charlie</code></a> or <code>5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y</code></td><td>The providers's address</td></tr>
+<tr><td><code>start_block</code></td><td><code>25</code></td><td>When the deal should start</td></tr>
+<tr><td><code>end_block</code></td><td><code>50</code></td><td>When the deal should end</td></tr>
+<tr><td><code>storage_price_per_block</code></td><td><code>1_000_000_000</code></td><td>In <a href="getting-started/../glossary.html#planck">Plancks</a>, the storage price per block (12 sec)</td></tr>
+<tr><td><code>provider_collateral</code></td><td><code>12_500_000_000</code></td><td>In <a href="getting-started/../glossary.html#planck">Plancks</a>, the price paid by the storage provider if they fail to uphold their end of the deal</td></tr>
+</tbody></table>
+</div>
+<p>After the negotiation, they need to <a href="getting-started/../pallets/market.html#add_balance">add funds to the Pallet</a> and then <a href="getting-started/../pallets/market.html#publish_storage_deals">publish their intent</a> so it can be checked by the parachain.
+So here they go:</p>
+<pre><code class="language-bash"># Adding balance to Alice's account
+$ storagext-cli --sr25519-key "//Alice" market add-balance 25000000000
+[0xe0bd…06f9] Balance Added: { account: 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY, amount: 25000000000 }
+# Adding balance to Charlie's account
+$ storagext-cli --sr25519-key "//Charlie" market add-balance 12500000000
+[0x25aa…edd3] Balance Added: { account: 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y, amount: 12500000000 }
+# Publishing their deal
+$ storagext-cli --sr25519-key  "//Charlie" market publish-storage-deals --client-sr25519-key  "//Alice" "@husky-deal.json"
+[0xd50b…dee6] Deal Published: { deal_id: 0, provider_account: 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y, client_account: 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY }
+</code></pre>
+<div class="footnote-definition" id="no-cid"><sup class="footnote-definition-label">1</sup>
+<p>We have not provided a standalone command to generate CID out of the file. The CAR server is a temporary showcase component.</p>
+</div>
+<div class="footnote-definition" id="no-sp-discovery"><sup class="footnote-definition-label">2</sup>
+<p>We have not yet implemented Storage Provider Discovery protocol.</p>
+</div>
+<h2 id="2-committing-a-deal"><a class="header" href="#2-committing-a-deal">2. Committing a deal</a></h2>
+<p>After the deals have been published, the rest is up to Charlie.
+If Charlie does not behave appropriately, <a href="getting-started/../pallets/storage-provider.html#pre_commit_sector">pre-commit</a> and <a href="getting-started/../pallets/storage-provider.html#prove_commit_sector">prove</a> the deal by block 25 (<code>start_block</code>),
+he will be slashed, and all his funds <a href="getting-started/../glossary.html#collateral">(<code>provider_collateral</code>)</a> will be gone.<sup class="footnote-reference"><a href="#slash">3</a></sup>
+So he should do his part!</p>
+<p><code>pre-commit-husky.json</code></p>
+<pre><code class="language-json">{
+  "sector_number": 1,
+  "sealed_cid": "bafk2bzaceajreoxfdcpdvitpvxm7vkpvcimlob5ejebqgqidjkz4qoug4q6zu",
+  "deal_ids": [0],
+  "expiration": 75,
+  "unsealed_cid": "bafk2bzaceajreoxfdcpdvitpvxm7vkpvcimlob5ejebqgqidjkz4qoug4q6zu",
+  "seal_proof": "StackedDRG2KiBV1P1"
+}
+</code></pre>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Value</th><th>Description</th></tr></thead><tbody>
+<tr><td><a href="getting-started/../glossary.html#sector"><code>sector_number</code></a></td><td>1</td><td>The place where <code>husky.jpg</code> will be stored. Charlie decided it'll be on his 1st sector.</td></tr>
+<tr><td><code>deal_ids</code></td><td><code>[0]</code></td><td>A sector can contain multiple deals, but it only contains the first one ever created (id: 0).</td></tr>
+<tr><td><code>expiration</code></td><td><code>75</code></td><td>The 75th block is 5 minutes after the <code>end_block</code>, so the sector expires only after the deal has been terminated.</td></tr>
+<tr><td><a href="getting-started/../glossary.html#commitment-of-replication"><code>sealed_cid</code></a>, <a href="getting-started/../glossary.html#commitment-of-data"><code>unsealed_cid</code></a>,</td><td>multiple</td><td>Currently, placeholder values (any CID) since the proof mechanism is a work-in-progress.</td></tr>
+<tr><td><code>seal_proof</code></td><td><code>StackedDRG2KiBV1P1</code></td><td>Currently, we only accept sector sizes of 2KiB, so this is the only value possible.</td></tr>
+</tbody></table>
+</div>
+<p><code>prove-commit-husky.json</code></p>
+<pre><code class="language-json">{
+  "sector_number": 1,
+  "proof": "1230deadbeef"
+}
+</code></pre>
+<ul>
+<li><code>proof</code>: hex string of bytes of the proof, it's WIP, so any non-zero value works.</li>
+</ul>
+<pre><code class="language-bash">$ storagext-cli --sr25519-key "//Charlie" storage-provider pre-commit "@pre-commit-husky.json"
+[0xf2ad…dc3d] Sector Pre-Committed: { owner: 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y, sector_number: Sector Pre-Commit Info: { sector_number: 1, expiration: 75, seal_proof: RegisteredSealProof::StackedDRG2KiBV1P1, unsealed_cid: bafk2bzaceajreoxfdcpdvitpvxm7vkpvcimlob5ejebqgqidjkz4qoug4q6zu, sealed_cid: bafk2bzaceajreoxfdcpdvitpvxm7vkpvcimlob5ejebqgqidjkz4qoug4q6zu } }
+$ storagext-cli --sr25519-key "//Charlie" storage-provider prove-commit "@prove-commit-husky.json"
+[0x0743…6fd3] Sector Proven: { owner: 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y, sector_number: 1, partition_number: 0, deadline_idx: 0 }
+</code></pre>
+<img src="getting-started/../images/demo/proven.PNG">
+<div class="footnote-definition" id="slash"><sup class="footnote-definition-label">3</sup>
+<p>You can wait for 5 minutes and observe a <code>DealSlashed</code> <a href="getting-started/../pallets/market.html#events">Event</a> being published.</p>
+</div>
+<h2 id="3-proofs-and-faults"><a class="header" href="#3-proofs-and-faults">3. Proofs and faults</a></h2>
+<h3 id="aside-on-deadlines"><a class="header" href="#aside-on-deadlines">Aside on Deadlines</a></h3>
+<p>There is a little something that Charlie needs to know about: deadlines <em>(don't we all...)</em>.</p>
+<p>Each Storage Provider has a Proving Period, a time divided into segments (deadlines).
+To simplify, let's say a proving period lasts a day (24 hours), and between the start and end of each hour, there is a segment, just like on a clock.</p>
+<img src="getting-started/../images/proving-period-deadlines.svg">
+<p>Now, when Charlie gathers enough data and stores it in a sector, he must keep proving that he has some data.
+Charlie can have multiple sectors and he doesn't want to overload the system by proving all of them simultaneously.
+So what if each sector got assigned a segment (1 hour) during the day, and Charlie would need to submit proof that he has data roughly on the same hour each day?
+That'd work, right?</p>
+<p>So this is what a Proving Period and Deadlines are.
+We divide a proving period into deadlines and when we prove commit, we assign a sector to a deadline.
+From now on, the sector must be proven periodically and daily during this lifetime.</p>
+<p><code>windowed-post.json</code></p>
+<pre><code class="language-json">{
+  "deadline": 0,
+  "partitions": [0],
+  "proof": {
+    "post_proof": "2KiB",
+    "proof_bytes": "1230deadbeef"
+  }
+}
+</code></pre>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Value</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>deadline</code></td><td><code>0</code></td><td>the deadline index which has been assigned by the Prove Commit</td></tr>
+<tr><td><code>partitions</code></td><td><code>[0]</code></td><td>the partitions which have been assigned by Prove Commit</td></tr>
+<tr><td><code>post_proof</code></td><td>"2KiB"</td><td>we only support sectors of size 2KiB for now, so it's the only possible value</td></tr>
+<tr><td><code>proof_bytes</code></td><td><code>0x1230deadbeef</code></td><td>hex string of bytes of the proof, it's WIP, so any non-zero value works</td></tr>
+</tbody></table>
+</div>
+<p>Now that the sector has been proven, Charlie must keep confirming that he stores the data.
+Charlie's proving period starts at block <code>21</code> (as <code>register-storage-provider</code> tells us), so the first deadline is between blocks <code>[21, 31)</code>, second <code>[31, 41)</code>.
+That's because there are <a href="getting-started/demo.html#const-period-deadlines">2 deadlines</a> within a <a href="getting-started/demo.html#const-proving-period">proving period</a>, and a deadline has a <a href="getting-started/demo.html#const-challenge-window">window of 10 blocks</a>.
+Charlie got assigned the first deadline, so he waits until block <code>21</code> to send the proof that he still stores the data.</p>
+<pre><code class="language-bash">$ storagext-cli --sr25519-key "//Charlie" storage-provider submit-windowed-post "@windowed-post.json"
+[0x3aa1…a12a] Valid PoSt Submitted: { owner: 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y }
+</code></pre>
+<img src="getting-started/../images/demo/post-submitted.PNG">
+<p>The next proving period starts at block <code>41</code>, with the deadline <code>[41, 51)</code>, so Charlie must submit his proof on this block.
+He knows he won't be able to create a proof, as his hard drives went down, so he reports it. If he didn't report, he'd get slashed.</p>
+<p><code>fault-declaration.json</code></p>
+<pre><code class="language-json">[
+  {
+    "deadline": 0,
+    "partition": 0,
+    "sectors": [1]
+  }
+]
+</code></pre>
+<pre><code class="language-bash">$ storagext-cli --sr25519-key "//Charlie" storage-provider declare-faults "@fault-declaration.json"
+[0x49cd…9a88] Faults Declared: { owner: 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y, faults: [Fault Declaration: { deadline: 0, partition: 0, sectors: [1] }] }
+</code></pre>
+<img src="getting-started/../images/demo/faults-declared.PNG">
+<p>Charlie fixed his issues with storage and now wants to declare that he can still provide data in this sector.
+If he does this too late (1 minute before the next deadline starts), he won't be able to.</p>
+<pre><code class="language-bash">$ storagext-cli --sr25519-key "//Charlie" storage-provider declare-faults-recovered "@fault-declaration.json"
+Error: Runtime error: Pallet error: StorageProvider::FaultRecoveryTooLate
+
+Caused by:
+    Pallet error: StorageProvider::FaultRecoveryTooLate
+</code></pre>
+<p>If he does it at least a minute before, it succeeds:</p>
+<pre><code class="language-bash">$ storagext-cli --sr25519-key "//Charlie" storage-provider declare-faults-recovered "@fault-declaration.json"
+[0xca6b…875c] Faults Recovered: { owner: 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y, recoveries: [Recovery Declaration: { deadline: 0, partition: 0, sectors: [1] }] }
+</code></pre>
+<p>And then, at the next deadline, in the next proving period <code>[41, 51)</code> he needs to remember to submit windowed PoSt again.</p>
+<pre><code class="language-bash">$ storagext-cli --sr25519-key "//Charlie" storage-provider submit-windowed-post "@windowed-post.json"
+[0x3e46…5636] Valid PoSt Submitted: { owner: 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y }
+</code></pre>
+<h2 id="4-reaping-the-rewards"><a class="header" href="#4-reaping-the-rewards">4. Reaping the rewards</a></h2>
+<p>After the deal ends (after block <code>50</code>), Charlie goes to get his rewards!
+First, he settles all of the locked funds, so his balance gets unlocked, and then he withdraws the balance from his Market account to use his DOTs for a new shiny dumbbell.</p>
+<pre><code class="language-bash">$ storagext-cli --sr25519-key "//Charlie" market settle-deal-payments 0
+[0x1633…d17b] Deals settled: { successful: [Settled Deal { deal_id: 0, provider_account: 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y, client_account: 5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY, amount: 25000000000 }], unsuccessful: [] }
+$ storagext-cli --sr25519-key "//Charlie" market withdraw-balance 37500000000
+[0x0197…bdd9] Balance Withdrawn: { account: 5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y, amount: 37500000000 }
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="polka-storage-provider"><a class="header" href="#polka-storage-provider">Polka Storage Provider</a></h1>
+<p>The Polka Storage Provider CLI provides two commands — <code>wallet</code> and <code>storage</code>.</p>
+<h2 id="storage"><a class="header" href="#storage"><code>storage</code></a></h2>
+<p>The <code>storage</code> command launches a server that converts arbitrary files into CARv2 files
+— it does so using our CARv2 Rust library (the first Rust CARv2 implementation).</p>
+<p>You can read more about it on the <a href="storage-provider-cli/./storage.html"><code>storage</code></a> page.</p>
+<h2 id="wallet"><a class="header" href="#wallet"><code>wallet</code></a></h2>
+<p>The <code>wallet</code> command is a thin wrapper over the <a href="https://docs.substrate.io/reference/command-line-tools/subkey/"><code>subkey</code></a> utility provided by Polkadot.</p>
+<p>You can read more about it on the <a href="storage-provider-cli/./wallet.html"><code>wallet</code></a> page.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="the-storage-command"><a class="header" href="#the-storage-command">The <code>storage</code> command</a></h1>
+<p>The <code>storage</code> command launches a server that can convert files into CAR files.
+It has two parameters that you can customize:</p>
+<div class="table-wrapper"><table><thead><tr><th>Parameter</th><th>Description</th><th>Default value</th></tr></thead><tbody>
+<tr><td><code>--listen-addr &lt;ADDR&gt;</code></td><td>The address (including the port) for the storage server</td><td><code>127.0.0.1:9000</code></td></tr>
+<tr><td><code>--storage-dir &lt;DIR&gt;</code></td><td>The directory where the files will be stored</td><td><code>$PWD/uploads</code></td></tr>
+</tbody></table>
+</div>
+<h3 id="start-the-storage-server"><a class="header" href="#start-the-storage-server">Start the Storage Server</a></h3>
+<p>Next, start the storage server using the created volume:</p>
+<pre><code class="language-bash">polka-storage-provider storage --listen-addr 0.0.0.0:9000
+</code></pre>
+<ul>
+<li><code>--listen-addr 0.0.0.0:9000</code>: Configures the server to listen on all available network interfaces.</li>
+</ul>
+<h2 id="upload-a-file"><a class="header" href="#upload-a-file">Upload a file</a></h2>
+<p>To upload a file to the provider's server, use the following curl command. Replace <code>image.jpg</code> with the path to your file:</p>
+<pre><code class="language-bash">curl \
+    -X POST \
+    --data-binary "@image.jpg" \
+    http://localhost:9000/upload
+</code></pre>
+<p>This command uploads the file <code>image.jpg</code> to the server running at <code>http://localhost:9000/upload</code>. The server converts the uploaded content to a CAR file and saves it to the mounted volume. The returned CID can later be used to fetch a CAR file from the server.</p>
+<h2 id="download-the-car-file"><a class="header" href="#download-the-car-file">Download the CAR File</a></h2>
+<p>After uploading, you will receive a CID (Content Identifier) for the file. Use this CID to download the corresponding CAR file. Replace <code>:cid</code> with the actual CID provided:</p>
+<pre><code class="language-bash">curl \
+    -X GET \
+    --output ./content.car \
+    http://localhost:9000/download/&lt;cid&gt;
+</code></pre>
+<ul>
+<li><code>-X GET</code>: Specifies the GET request method.</li>
+<li><code>http://localhost:9000/download/:cid</code>: The URL to download the CAR file, with <code>&lt;cid&gt;</code> being the placeholder for the actual CID.</li>
+<li><code>--output ./content.car</code>: Saves the downloaded CAR file as content.car in the current directory.</li>
+</ul>
+<p>Here's a quick example:</p>
+<pre><code class="language-bash">curl \
+    -X GET \
+    --output ./content.car \
+    http://localhost:9000/download/bafkreicqsawmxavfxpqncjy545bgulr54b5xliriexxjiaof6uue5ovduu
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="the-wallet-command"><a class="header" href="#the-wallet-command">The <code>wallet</code> command</a></h1>
+<p>The wallet command is a re-export of the Substrate CLI.
+For detailed documentation, you can check the following links:</p>
+<ul>
+<li><a href="https://docs.rs/sc-cli/0.46.0/sc_cli/commands/index.html"><code>sc_cli</code></a></li>
+<li><a href="https://docs.substrate.io/reference/command-line-tools/subkey/#subcommands"><code>subkey</code> subcommands</a></li>
+</ul>
+<h2 id="subcommands"><a class="header" href="#subcommands">Subcommands</a></h2>
+<p>You can use the following commands with the <code>wallet</code> subcommand:</p>
+<div class="table-wrapper"><table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>generate-node-key</code></td><td>Generate a random node key, write it to a file or stdout and write the corresponding peer-id to stderr</td></tr>
+<tr><td><code>generate</code></td><td>Generate a random account</td></tr>
+<tr><td><code>inspect</code></td><td>Gets a public key and an SS58 address from the provided Secret URI</td></tr>
+<tr><td><code>inspect-node-key</code></td><td>Load a node key from a file or stdin and print the corresponding peer-id</td></tr>
+<tr><td><code>sign</code></td><td>Sign a message with a given (secret) key</td></tr>
+<tr><td><code>vanity</code></td><td>Generate a seed that provides a vanity address</td></tr>
+<tr><td><code>verify</code></td><td>Verify a signature for a message, provided on STDIN, with a given (public or secret) key</td></tr>
+<tr><td><code>help</code></td><td>Print this message or the help of the given subcommand(s)</td></tr>
+</tbody></table>
+</div>
+<h2 id="examples"><a class="header" href="#examples">Examples</a></h2>
+<div class="warning">
+Keys shown on this page are, by default, not secure! Do not use them in production!
+</div>
+<p>Generate a new random key to interact with the Polka Storage parachain:</p>
+<pre><code class="language-bash">&gt; polka-storage-provider wallet generate
+Secret phrase:       offer payment boost boy manage car asset lock cousin mountain vehicle setup
+  Network ID:        substrate
+  Secret seed:       0xfe36ee692552b0ce54de06ce4f5cc152fe2fa808cb40f58c81168bc1237208bb
+  Public key (hex):  0x3ae6bdc05a6657cea011084d32b9970891be5d02b2101bbad0ca95d287f0226e
+  Account ID:        0x3ae6bdc05a6657cea011084d32b9970891be5d02b2101bbad0ca95d287f0226e
+  Public key (SS58): 5DPwBLBRGunws9T2aF59cht37HeBg9aSTAc6Fh2aFBJPSsr6
+  SS58 Address:      5DPwBLBRGunws9T2aF59cht37HeBg9aSTAc6Fh2aFBJPSsr6
+</code></pre>
+<p>If you want to add parameters like a password, you may do so using the <code>--password-interactive</code> flag:</p>
+<pre><code class="language-bash">&gt; polka-storage-provider wallet generate --password-interactive
+Key password: &lt;top secret hidden password&gt;
+Secret phrase:       comfort distance rack number assist nasty young universe lamp advice neglect ladder
+  Network ID:        substrate
+  Secret seed:       0x4243f3f1d78beb5c0408bbaeae58845881b638060380437967482be2d4d42bce
+  Public key (hex):  0x3acb66c0313d0e8ef896bc2317545582c1f0a928f402bcbe4cdf6f37489ddb16
+  Account ID:        0x3acb66c0313d0e8ef896bc2317545582c1f0a928f402bcbe4cdf6f37489ddb16
+  Public key (SS58): 5DPo4H1oPAQwReNVMi9XckSkvW4me1kJoageggJSMDF2EzjZ
+  SS58 Address:      5DPo4H1oPAQwReNVMi9XckSkvW4me1kJoageggJSMDF2EzjZ
+</code></pre>
+<p>Or you can pass it beforehand:</p>
+<pre><code class="language-bash">&gt; polka-storage-provider wallet generate --password &lt;top secret password&gt;
+Secret phrase:       cactus art crime burden hope also thought asset lake only cheese obtain
+  Network ID:        substrate
+  Secret seed:       0xb69c2d238fa7641f0d69911ca8f107f1b97a51cfc71e8a06e0ec9c7329d69ff7
+  Public key (hex):  0xb60a716e488bcb2a54ef1b1cf8874569d2d927cc830ae0ae1cc2612fac27f55d
+  Account ID:        0xb60a716e488bcb2a54ef1b1cf8874569d2d927cc830ae0ae1cc2612fac27f55d
+  Public key (SS58): 5GBPg51VZG8PobmkLNSn9vDkNvoBXV5vCGhbetifgxwjPKAg
+  SS58 Address:      5GBPg51VZG8PobmkLNSn9vDkNvoBXV5vCGhbetifgxwjPKAg
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="storagext-cli"><a class="header" href="#storagext-cli">Storagext CLI</a></h1>
+<p>Alongside the pallets, we've also developed a CLI to enable calling extrinsics without Polkadot.js.</p>
+<p>The CLI's goal is to ease development and testing and to sidestep some limitations of the Polkadot.js visual interface.</p>
+<p>This chapter covers how to use the <code>storagext-cli</code>, and you will find several examples of usage throughout the book.</p>
+<h2 id="getting-started-1"><a class="header" href="#getting-started-1">Getting started</a></h2>
+<p>The <code>storagext-cli</code> takes two main flags — the node's RPC address and a key<sup class="footnote-reference"><a href="#keys">1</a></sup>,
+the latter is split into three kinds, and <strong>one is required</strong> for most operations
+(for example, if the operation being called is a <a href="https://wiki.polkadot.network/docs/learn-transactions#types-of-extrinsics">signed extrinsic</a><sup class="footnote-reference"><a href="#optional_keys">2</a></sup>):</p>
+<ul>
+<li><a href="https://wiki.polkadot.network/docs/learn-cryptography">Sr25519</a> — <code>--sr25519-key</code> or the <code>SR25519_KEY</code> environment variable</li>
+<li><a href="https://en.bitcoin.it/wiki/Secp256k1">ECDSA</a> — <code>--ecdsa-key</code> or the <code>ECDSA_KEY</code> environment variable</li>
+<li><a href="https://en.wikipedia.org/wiki/EdDSA#Ed25519">Ed25519</a> — <code>--ed25519-key</code> or the <code>ED25519_KEY</code> environment variable</li>
+</ul>
+<p>For example, to connect to a node at <code>supercooldomain.com:1337</code> using Charlie's Sr25519 key, you would run the following command:</p>
+<pre><code class="language-bash">storagext-cli --node-rpc "supercooldomain.com:1337" --sr25519-key "//Charlie" &lt;commands&gt;
+</code></pre>
+<p>Or, retrieving the same key but using the environment variable form:</p>
+<pre><code class="language-bash">SR25519_KEY="//Charlie" storagext-cli --node-rpc "supercooldomain.com:1337" &lt;commands&gt;
+</code></pre>
+<h3 id="flags"><a class="header" href="#flags">Flags</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>--node-rpc</code></td><td>The node's RPC address (including port), defaults to <code>ws://127.0.0.1:42069</code></td></tr>
+<tr><td><code>--sr25519-key</code></td><td>Sr25519 keypair, encoded as hex, BIP-39 or a dev phrase like <code>//Charlie</code></td></tr>
+<tr><td><code>--ecdsa-key</code></td><td>ECDSA keypair, encoded as hex, BIP-39 or a dev phrase like <code>//Charlie</code></td></tr>
+<tr><td><code>--ed25519-key</code></td><td>Ed25519 keypair, encoded as hex, BIP-39 or a dev phrase like <code>//Charlie</code></td></tr>
+</tbody></table>
+</div>
+<div class="footnote-definition" id="keys"><sup class="footnote-definition-label">1</sup>
+<p>Read more about how cryptographic keys are used in Polkadot — <a href="https://wiki.polkadot.network/docs/learn-cryptography">https://wiki.polkadot.network/docs/learn-cryptography</a>.</p>
+</div>
+<div class="footnote-definition" id="optional_keys"><sup class="footnote-definition-label">2</sup>
+<p>If a key is passed to the CLI, but the operation called does not require a key, <strong>the key will not be used</strong>.</p>
+</div>
+<h2 id="sub-chapters"><a class="header" href="#sub-chapters">Sub-chapters</a></h2>
+<ul>
+<li><a href="storagext-cli/market.html">Subcommand <code>market</code></a></li>
+<li><a href="storagext-cli/storage-provider.html">Subcommand <code>storage-provider</code></a></li>
+<li><a href="storagext-cli/system.html">Subcommand <code>system</code></a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="the-market-command"><a class="header" href="#the-market-command">The <code>market</code> command</a></h1>
+<p>Under the <code>market</code> subcommand, you will find the <a href="storagext-cli/../pallets/market.html">Market</a>-related extrinsics.
+This chapter covers the provided commands and how to use them.</p>
+<div class="warning">
+If you haven't done so before, you should read the <a href="storagext-cli/./index.html"><code>storagext-cli</code> getting started</a> page,
+which covers the basic flags necessary to operate the CLI.
+</div>
+<h2 id="add-balance"><a class="header" href="#add-balance"><code>add-balance</code></a></h2>
+<p>The <code>add-balance</code> command allows you to add balance to your market account.
+It takes a single <code>AMOUNT</code> argument, the balance, to add to the market account,
+and the balance will be added to the <code>free</code> balance.</p>
+<h3 id="parameters"><a class="header" href="#parameters">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>AMOUNT</code></td><td>The amount to be added to the market balance</td><td>Positive integer</td></tr>
+</tbody></table>
+</div>
+<h3 id="example"><a class="header" href="#example"><a class="header" id="add-balance.example" href="storagext-cli/market.html#add-balance.example">Example</a></a></h3>
+<p>Adding 1000000000 <a href="storagext-cli/../glossary.html#planck">Plancks</a> to Alice's account.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" market add-balance 1000000000
+</code></pre>
+<div class="warning">
+The <code>1000000000</code> value is not arbitrary, it is the <a href="https://support.polkadot.network/support/solutions/articles/65000168651-what-is-the-existential-deposit-">minimum existential deposit</a> for any Polkadot account. As such, when the Market account is being setup, the first deposit ever needs to meet this minimum to <b>create</b> the Market account.
+<p>If you attempt to create the Market account with less than <code>1000000000</code>, you will get the following error:</p>
+<pre>
+<code>Error: Runtime error: Token error: Account cannot exist with the funds that would be given.</code>
+</pre>
+</div>
+<blockquote>
+<p>You can read more about the <code>add_balance</code> extrinsic in <a href="storagext-cli/../pallets/market.html#add_balance"><em>Pallets/Market Pallet/Add Balance</em></a>.</p>
+</blockquote>
+<h2 id="withdraw-balance"><a class="header" href="#withdraw-balance"><code>withdraw-balance</code></a></h2>
+<p>The <code>withdraw-balance</code> command allows you to withdraw balance from your market account.
+Like <a href="storagext-cli/market.html#add-balance"><code>add-balance</code></a>, <code>withdraw-balance</code> takes a single <code>AMOUNT</code> argument;
+note that <em>only the <code>free</code> balance can be withdrawn</em>.
+Likewise, you can only withdraw a balance amount lesser than or equal to the <code>free</code> amount and greater than 0 (\({free} \ge {amount} \gt 0\)).</p>
+<h3 id="parameters-1"><a class="header" href="#parameters-1">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>AMOUNT</code></td><td>The amount to be withdrawn to the market balance</td><td>Positive integer</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-1"><a class="header" href="#example-1"><a class="header" id="withdraw-balance.example" href="storagext-cli/market.html#withdraw-balance.example">Example</a></a></h3>
+<p>Withdrawing 10000 <a href="storagext-cli/../glossary.html#planck">Plancks</a> from Alice's account.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" market withdraw-balance 10000
+</code></pre>
+<blockquote>
+<p>You can read more about the <code>withdraw_balance</code> extrinsic in <a href="storagext-cli/../pallets/market.html#withdraw-balance"><em>Pallets/Market Pallet/Withdraw Balance</em></a>.</p>
+</blockquote>
+<h2 id="publish-storage-deals"><a class="header" href="#publish-storage-deals"><code>publish-storage-deals</code></a></h2>
+<p>The <code>publish-storage-deals</code> command allows you to publish storage deals that have been agreed upon off-chain.
+The deals are to be submitted by the storage provider, having been previously signed by the client.</p>
+<div class="warning">
+Since this CLI is currently targeted at testing and demos, the client keypair is required to sign the deal.
+We know this is <i>not secure</i> and <i>unrealistic</i> in a production scenario (it is a good thing this is a demo)!
+</div>
+<h3 id="parameters-2"><a class="header" href="#parameters-2">Parameters</a></h3>
+<p>The client keypair can be passed using <code>--client-&lt;key kind&gt;</code>, where <code>&lt;key kind&gt;</code> is one of the <a href="storagext-cli/index.html#getting-started">three supported keys</a>, like the global keys, one is required.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>--client-sr25519-key</code></td><td>Sr25519 keypair</td><td>String, encoded as hex, BIP-39 or a dev phrase like <code>//Charlie</code></td></tr>
+<tr><td><code>--client-ecdsa-key</code></td><td>ECDSA keypair</td><td>String, encoded as hex, BIP-39 or a dev phrase like <code>//Charlie</code></td></tr>
+<tr><td><code>--client-ed25519-key</code></td><td>Ed25519 keypair</td><td>String, encoded as hex, BIP-39 or a dev phrase like <code>//Charlie</code></td></tr>
+<tr><td><code>DEALS</code></td><td>The deals to be published</td><td>JSON array. Can be passed as a string, or as a file path prefixed with <code>@</code> pointing to the file containing the JSON object.</td></tr>
+</tbody></table>
+</div>
+<p>The <code>DEALS</code> JSON array is composed of objects:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>piece_cid</code></td><td>Byte encoded CID</td><td><a href="https://github.com/multiformats/cid">CID</a></td></tr>
+<tr><td><code>piece_size</code></td><td>Size of the piece</td><td>Positive integer</td></tr>
+<tr><td><code>client</code></td><td>SS58 address of the storage client</td><td><a href="https://docs.substrate.io/learn/accounts-addresses-keys/">SS58 address</a></td></tr>
+<tr><td><code>provider</code></td><td>SS58 address of the storage provider</td><td><a href="https://docs.substrate.io/learn/accounts-addresses-keys/">SS58 address</a></td></tr>
+<tr><td><code>label</code></td><td>Arbitrary client chosen label</td><td>String, with a maximum length of 128 characters</td></tr>
+<tr><td><code>start_block</code></td><td>Block number on which the deal should start</td><td>Positive integer</td></tr>
+<tr><td><code>end_block</code></td><td>Block number on which the deal should end</td><td>Positive integer, <code>end_block &gt; start_block</code></td></tr>
+<tr><td><code>storage_price_per_block</code></td><td>Price for the storage specified per block[^storage_price_per_block]</td><td>Positive integer, in <a href="storagext-cli/../glossary.html#planck">Plancks</a></td></tr>
+<tr><td><code>provider_collateral</code></td><td>Collateral which is slashed if the deal fails</td><td>Positive integer, in <a href="storagext-cli/../glossary.html#planck">Plancks</a></td></tr>
+<tr><td><code>state</code></td><td>Deal state. Can only be set to <code>Published</code></td><td>String</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-2"><a class="header" href="#example-2"><a class="header" id="publish-storage-deals.example" href="storagext-cli/market.html#publish-storage-deals.example">Example</a></a></h3>
+<p>Publishing deals between Alice (the Storage Provider) and Charlie (the client).</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" market publish-storage-deals \
+  --client-sr25519-key "//Charlie" \
+  "@deals.json"
+</code></pre>
+<p>Where <code>deals.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">[
+  {
+    "piece_cid": "bafk2bzacecg3xxc4f2ql2hreiuy767u6r72ekdz54k7luieknboaakhft5rgk",
+    "piece_size": 1337,
+    "client": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+    "provider": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+    "label": "Super Cool (but secret) Plans for a new Polkadot Storage Solution",
+    "start_block": 69,
+    "end_block": 420,
+    "storage_price_per_block": 15,
+    "provider_collateral": 2000,
+    "state": "Published"
+  },
+  {
+    "piece_cid": "bafybeih5zgcgqor3dv6kfdtv3lshv3yfkfewtx73lhedgihlmvpcmywmua",
+    "piece_size": 1143,
+    "client": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+    "provider": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+    "label": "List of problematic (but flying) Boeing planes",
+    "start_block": 1010,
+    "end_block": 1997,
+    "storage_price_per_block": 1,
+    "provider_collateral": 3900,
+    "state": "Published"
+  }
+]
+</code></pre>
+<blockquote>
+<p>You can read more about the <code>publish_storage_deals</code> extrinsic in <a href="storagext-cli/../pallets/market.html#publish_storage_deals"><em>Pallets/Market Pallet/Publish Storage Deals</em></a>.</p>
+</blockquote>
+<h2 id="settle-deal-payments"><a class="header" href="#settle-deal-payments"><code>settle-deal-payments</code></a></h2>
+<p>The <code>settle-deal-payments</code> command allows you to settle deal payments,
+that is, have the storage provider receive the owed funds from storing data for their clients.
+Non-existing deal IDs will be ignored.</p>
+<p>Anyone can settle anyone's deals, though there's little incentive to do so — if you're feeling charitable, who are we to stop you?!</p>
+<h3 id="parameters-3"><a class="header" href="#parameters-3">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>DEAL_IDS</code></td><td>The IDs for the deals to be settled</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-3"><a class="header" href="#example-3"><a class="header" id="settle-deal-payments.example" href="storagext-cli/market.html#settle-deal-payments.example">Example</a></a></h3>
+<p>Settling deals with the IDs 97, 1010, 1337, 42069:</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" market settle-deal-payments 97 1010 1337 42069
+</code></pre>
+<blockquote>
+<p>You can read more about the <code>publish_storage_deals</code> extrinsic in <a href="storagext-cli/../pallets/market.html#settle_deal_payments"><em>Pallets/Market Pallet/Settle Deal Payments</em></a>.</p>
+</blockquote>
+<h2 id="retrieve-balance"><a class="header" href="#retrieve-balance"><code>retrieve-balance</code></a></h2>
+<p>The <code>retrieve-balance</code> command allows you to check the balance of any market account.</p>
+<h3 id="parameters-4"><a class="header" href="#parameters-4">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>ACCOUNT_ID</code></td><td>The IDs of the account being checked</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-4"><a class="header" href="#example-4"><a class="header" id="settle-deal-payments.example" href="storagext-cli/market.html#settle-deal-payments.example">Example</a></a></h3>
+<pre><code class="language-bash">storagext-cli market retrieve-balance "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY" # Alice's account
+</code></pre>
+<blockquote>
+<p>This extrinsic <strong>is not signed</strong>, and does not need to be called using any of the <code>--X-key</code> flags.</p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="the-storage-provider-command"><a class="header" href="#the-storage-provider-command">The <code>storage-provider</code> command</a></h1>
+<p>Under the <code>storage-provider</code> subcommand, you will find the <a href="storagext-cli/../pallets/storage-provider.html">Storage Provider</a>-related extrinsics.
+This chapter covers the provided commands and how to use them.</p>
+<div class="warning">
+If you haven't done so, you should read the <a href="storagext-cli/./index.html"><code>storagext-cli</code> getting started</a> page,
+which covers the basic flags necessary to operate the CLI.
+</div>
+<h3 id="register"><a class="header" href="#register"><code>register</code></a></h3>
+<p>The <code>register</code> command allows you to register as a storage provider. Before you can start providing storage, you need to register to be able to deal with the clients and perform any storage provider duties.</p>
+<h3 id="parameters-5"><a class="header" href="#parameters-5">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>PEER_ID</code></td><td>The peer ID under which the registered provider will be tracked</td><td>String</td></tr>
+<tr><td><code>POST_PROOF</code></td><td>The proof type that the provider will use to prove storage (Default: 2KiB)</td><td>String</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-5"><a class="header" href="#example-5"><a class="header" id="register.example" href="storagext-cli/storage-provider.html#register.example">Example</a></a></h3>
+<p>Registering the provider with the specific <code>peer_id</code></p>
+<pre><code class="language-bash">storagext-cli --sr25519-key &lt;key&gt; storage-provider register &lt;peer_id&gt;
+</code></pre>
+<blockquote>
+<p>You can read more about the <code>register</code> extrinsic in <a href="storagext-cli/../pallets/storage-provider.html#register_storage_provider"><em>Pallets/Storage Provider/Register</em></a>.</p>
+</blockquote>
+<h3 id="pre-commit"><a class="header" href="#pre-commit"><code>pre-commit</code></a></h3>
+<p>The <code>pre-commit</code> command allows you to pre-commit a sector with deals that <code>market publish-storage-deals</code> have published.
+The pre-committed sector has to be proven, or the deals will not activate and will be slashed.</p>
+<h3 id="parameters-6"><a class="header" href="#parameters-6">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>PRE_COMMIT_SECTOR</code></td><td>The sector we are committing to</td><td>JSON object. Can be passed as a string, or as a file path prefixed with <code>@</code> pointing to the file containing the JSON object.</td></tr>
+</tbody></table>
+</div>
+<p>The <code>PRE_COMMIT_SECTOR</code> JSON object has the following structure:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>sector_number</code></td><td>Sector number</td></tr>
+<tr><td><code>sealed_cid</code></td><td>Byte encoded CID</td></tr>
+<tr><td><code>deal_ids</code></td><td>List of deal IDs</td></tr>
+<tr><td><code>expiration</code></td><td>Sector expiration</td></tr>
+<tr><td><code>unsealed_cid</code></td><td>Byte encoded CID</td></tr>
+<tr><td><code>seal_proof</code></td><td>Sector seal proof</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-6"><a class="header" href="#example-6"><a class="header" id="pre-commit.example" href="storagext-cli/storage-provider.html#pre-commit.example">Example</a></a></h3>
+<p>Pre-commits a sector with specified deals.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key &lt;key&gt; storage-provider pre-commit \
+    "@pre-commit-sector.json"
+</code></pre>
+<p>Where <code>pre-commit-sector.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">{
+  "sector_number": 0,
+  "sealed_cid": "bafk2bzaceajreoxfdcpdvitpvxm7vkpvcimlob5ejebqgqidjkz4qoug4q6zu",
+  "deal_ids": [0],
+  "expiration": 100,
+  "unsealed_cid": "bafkreibme22gw2h7y2h7tg2fhqotaqjucnbc24deqo72b6mkl2egezxhvy",
+  "seal_proof": "StackedDRG2KiBV1P1"
+}
+</code></pre>
+<blockquote>
+<p>You can read more about the <code>pre_commit</code> extrinsic in <a href="storagext-cli/../pallets/storage-provider.html#pre_commit_sector"><em>Pallets/Storage Provider/Pre-commit sector</em></a>.</p>
+</blockquote>
+<h3 id="prove-commit"><a class="header" href="#prove-commit"><code>prove-commit</code></a></h3>
+<p>The <code>prove-commit</code> command allows you to prove a sector commitment. Currently, any proof that is a hex encoded string of length &gt;= 1 is accepted.
+After the sector is proven, the deals will become <code>Active</code>.</p>
+<h3 id="parameters-7"><a class="header" href="#parameters-7">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>PROVE_COMMIT_SECTOR</code></td><td>The sector we are proving</td><td>JSON object. Can be passed as a string, or as a file path prefixed with <code>@</code> pointing to the file containing the JSON object.</td></tr>
+</tbody></table>
+</div>
+<p>The <code>PROVE_COMMIT_SECTOR</code> JSON object has the following structure:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>sector_number</code></td><td>Sector number</td></tr>
+<tr><td><code>proof</code></td><td>Hex encoded proof</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-7"><a class="header" href="#example-7"><a class="header" id="prove-commit.example" href="storagext-cli/storage-provider.html#prove-commit.example">Example</a></a></h3>
+<p>Proves a sector commitment.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key &lt;key&gt; storage-provider prove-commit \
+    "@prove-commit-sector.json"
+</code></pre>
+<p>Where <code>prove-commit-sector.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">{
+  "sector_number": 0,
+  "proof": "beef"
+}
+</code></pre>
+<blockquote>
+<p>You can read more about <code>prove_commit</code> extrinsic in <a href="storagext-cli/../pallets/storage-provider.html#prove_commit_sector"><em>Pallets/Storage Provider/Prove-commit sector</em></a>.</p>
+</blockquote>
+<h3 id="submit-windowed-post"><a class="header" href="#submit-windowed-post"><code>submit-windowed-post</code></a></h3>
+<p>The <code>submit-windowed-post</code> command allows you to submit a windowed PoSt proof. The PoSt proof needs to be periodically submitted to prove that some sector is still stored. Sectors are proven in a baches called partitions.</p>
+<h3 id="parameters-8"><a class="header" href="#parameters-8">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>WINDOWED_POST</code></td><td>The proof for some partition</td><td>JSON object. Can be passed as a string, or as a file path prefixed with <code>@</code> pointing to the file containing the JSON object.</td></tr>
+</tbody></table>
+</div>
+<p>The <code>WINDOWED_POST</code> JSON object has the following structure:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>deadline</code></td><td>Deadline ID</td></tr>
+<tr><td><code>partition</code></td><td>Partition ID</td></tr>
+<tr><td><code>PROOF</code></td><td>JSON object</td></tr>
+</tbody></table>
+</div>
+<p>The <code>PROOF</code> JSON object has the following structure:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>post_proof</code></td><td>Proof type ("2KiB" or "StackedDRGWindow2KiBV1P1")</td></tr>
+<tr><td><code>proof_bytes</code></td><td>Hex encoded proof</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-8"><a class="header" href="#example-8"><a class="header" id="submit-windowed-post.example" href="storagext-cli/storage-provider.html#submit-windowed-post.example">Example</a></a></h3>
+<p>Proves a partition in a specific deadline.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key &lt;key&gt; storage-provider submit-windowed-post \
+    "@window-proof.json"
+</code></pre>
+<p>Where <code>window-proof.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">{
+  "deadline": 0,
+  "partition": 0,
+  "proof": {
+    "post_proof": "2KiB",
+    "proof_bytes": "07482439"
+  }
+}
+</code></pre>
+<blockquote>
+<p>You can read more about the <code>submit_windowed_post</code> extrinsic in <a href="storagext-cli/../pallets/storage-provider.html#submit_windowed_post"><em>Pallets/Storage Provider/Submit Windowed Post</em></a>.</p>
+</blockquote>
+<h3 id="declare-faults"><a class="header" href="#declare-faults"><code>declare-faults</code></a></h3>
+<p>The <code>declare-faults</code> command allows you to declare faulty sectors. This is required to avoid penalties for not submitting <a href="storagext-cli/../glossary.html#post">Window PoSt</a> at the required time.</p>
+<h3 id="parameters-9"><a class="header" href="#parameters-9">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>FAULTS</code></td><td>List of declared faults</td><td>JSON array. Can be passed as a string, or as a file path prefixed with <code>@</code> pointing to the file containing the JSON array.</td></tr>
+</tbody></table>
+</div>
+<p>The <code>FAULTS</code> JSON object has the following structure:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>deadline</code></td><td>Deadline ID</td></tr>
+<tr><td><code>partition</code></td><td>Partition ID</td></tr>
+<tr><td><code>sectors</code></td><td>Faulty sectors IDs</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-9"><a class="header" href="#example-9"><a class="header" id="declare-faults.example" href="storagext-cli/storage-provider.html#declare-faults.example">Example</a></a></h3>
+<p>Declares a list of faulty sectors in a specific deadline and partition.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key &lt;key&gt; storage-provider declare-faults \
+    "@faults.json"
+</code></pre>
+<p>Where <code>faults.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">[
+  {
+    "deadline": 0,
+    "partition": 0,
+    "sectors": [0]
+  }
+]
+</code></pre>
+<blockquote>
+<p>You can read more about the <code>declare_faults</code> extrinsic in <a href="storagext-cli/../pallets/storage-provider.html#declare_faults"><em>Pallets/Storage Provider/Declare Faults</em></a>.</p>
+</blockquote>
+<h3 id="declare-faults-recovered"><a class="header" href="#declare-faults-recovered"><code>declare-faults-recovered</code></a></h3>
+<p>The <code>declare-faults-recovered</code> command allows you to declare recovered faulty sectors.</p>
+<h3 id="parameters-10"><a class="header" href="#parameters-10">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>RECOVERIES</code></td><td>List of declared recoveries</td><td>JSON array. Can be passed as a string, or as a file path prefixed with <code>@</code> pointing to the file containing the JSON array.</td></tr>
+</tbody></table>
+</div>
+<p>The <code>RECOVERIES</code> JSON object has the following structure:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>deadline</code></td><td>Deadline ID</td></tr>
+<tr><td><code>partition</code></td><td>Partition ID</td></tr>
+<tr><td><code>sectors</code></td><td>Faulty sectors IDs</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-10"><a class="header" href="#example-10"><a class="header" id="declare-faults-recovered.example" href="storagext-cli/storage-provider.html#declare-faults-recovered.example">Example</a></a></h3>
+<p>Declares a list of sectors as recovered in a specific deadline and partition.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key &lt;key&gt; storage-provider declare-faults-recovered \
+    "@recoveries.json"
+</code></pre>
+<p>Where <code>recoveries.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">[
+  {
+    "deadline": 0,
+    "partition": 0,
+    "sectors": [0]
+  }
+]
+</code></pre>
+<blockquote>
+<p>You can read more about the <code>declare_faults_recovered</code> extrinsic in <a href="storagext-cli/../pallets/storage-provider.html#declare_faults_recovered"><em>Pallets/Storage Provider/Declare Faults Recovered</em></a>.</p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="the-system-command"><a class="header" href="#the-system-command">The <code>system</code> command</a></h1>
+<p>The command provides various utilities for interacting with the blockchain. It allows you to retrieve information about the current state of the chain.</p>
+<div class="warning">
+If you haven't done so before, you should read the <a href="storagext-cli/./index.html"><code>storagext-cli</code> getting started</a> page,
+which covers the basic flags necessary to operate the CLI.
+</div>
+<h2 id="get-height"><a class="header" href="#get-height"><code>get-height</code></a></h2>
+<p>The command allows you to get the current block height of the chain.</p>
+<h3 id="example-11"><a class="header" href="#example-11"><a class="header" id="get-height.example" href="storagext-cli/system.html#get-height.example">Example</a></a></h3>
+<p>Getting the current block height of the chain.</p>
+<pre><code class="language-bash">storagext-cli system get-height
+</code></pre>
+<h2 id="wait-for-height"><a class="header" href="#wait-for-height"><code>wait-for-height</code></a></h2>
+<p>The command allows you to wait for the chain to reach a specific block height. It will exit once the chain has reached the specified height.</p>
+<h3 id="parameters-11"><a class="header" href="#parameters-11">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>HEIGHT</code></td><td>The block height to wait for</td><td>Positive integer</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-12"><a class="header" href="#example-12"><a class="header" id="wait-for-height.example" href="storagext-cli/system.html#wait-for-height.example">Example</a></a></h3>
+<p>Waiting for the chain to reach block height 100.</p>
+<pre><code class="language-bash">storagext-cli system wait-for-height 100
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="polka-storage-pallets"><a class="header" href="#polka-storage-pallets">Polka Storage pallets</a></h1>
+<ul>
+<li><a href="pallets/storage-provider.html"><code>storage-provider</code></a> - A pallet that manages storage providers and their associated data.</li>
+<li><a href="pallets/market.html"><code>market</code></a> - A pallet that handles the storage market operations.</li>
+</ul>
+<h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
+<p>The Polka Storage parachain is all about making storage deals. Let us go over how a deal is done!</p>
+<p>Before anything else, <a href="pallets/../glossary.html#storage-provider">Storage Providers</a> need to register themselves with the <a href="pallets/./storage-provider.html">Storage Provider Pallet</a> — they can do so using the <a href="pallets/./storage-provider.html#register_storage_provider"><code>register_storage_provider</code></a> extrinsic.</p>
+<img src="pallets/../images/storage-provider/register_storage_provider.svg" alt="Storage Provider registration">
+<p>Now that storage providers can be registered in the storage provider pallet, we need to add some balance to both the
+<a href="pallets/../glossary.html#storage-user">Storage User's</a> and the Provider's accounts,
+which is done using the Market's <a href="pallets/./market.html#add_balance"><code>add_balance</code></a> extrinsic.</p>
+<img src="pallets/../images/market/add_balance.svg" alt="Adding balance to Market accounts">
+<p>Afterwards, storage users and providers negotiate data storage deals off-chain.
+Once a deal between the two parties is reached, the client can sign the deal and send it to the storage provider for publishing
+— the storage provider will then publish the signed deal using the <a href="pallets/market.html#publish_storage_deals"><code>publish_storage_deals</code></a> extrinsic.</p>
+<p>After publishing, the funds allocated for the deal will be moved from <code>free</code> to <code>locked</code>, and they can no longer be withdrawn until the deal has ended.</p>
+<img src="pallets/../images/market/publish_storage_deals.svg" alt="Publishing storage deals">
+<p>At this point, the remaining responsibility is shifted to the storage provider, which needs to activate the deal;
+to do so, the storage provider first needs to <a href="pallets/./storage-provider.html#pre_commit_sector">pre-commit</a> the deal's sectors,
+and then <a href="pallets/./storage-provider.html#prove_commit_sector">prove</a> they stored the sectors
+— these two steps are done using the <a href="pallets/./storage-provider.html#pre_commit_sector"><code>pre_commit_sector</code></a> and <a href="pallets/./storage-provider.html#prove_commit_sector"><code>prove_commit_sector</code></a> extrinsics.</p>
+<p>Verification is done and reported to the Market pallet to terminate the deal and apply penalties to the storage provider
+(remove and burn its collateral — i.e. <code>locked</code> funds) if they fail to activate the deal on time and return the funds to the client.</p>
+<img src="pallets/../images/storage-provider/sector_activation.svg" alt="Deal activation">
+<p>Suppose the deal has been completed successfully or is <strong>Active</strong>.
+In that case, the storage provider is now required to periodically submit proofs that they're still storing the user's data
+— the storage provider does this by calculating a proof and submitting it using <a href="pallets/./storage-provider.html#submit_windowed_post"><code>submit_windowed_post</code></a>.</p>
+<img src="pallets/../images/storage-provider/submit_windowed_post.svg" alt="Proving the data is still stored">
+<p>Finally, storage providers can then settle deal payments to receive their fair share for keeping the user's data safe — using the <a href="pallets/./market.html#settle_deal_payments"><code>settle_deal_payments</code></a> extrinsic.</p>
+<img src="pallets/../images/market/settle_deal_payments.svg" alt="Settling deal payments">
+<p>Putting it all together, we get the following:</p>
+<img id="figure-overview" src="pallets/../images/overview_flow.svg" alt="The described flow">
+<div style="break-before: page; page-break-before: always;"></div><h1 id="market-pallet"><a class="header" href="#market-pallet">Market Pallet</a></h1>
+<h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of Contents</a></h2>
+<ul>
+<li><a href="pallets/market.html#overview">Overview</a></li>
+<li><a href="pallets/market.html#extrinsics">Extrinsics</a>
+<ul>
+<li><a href="pallets/market.html#add_balance"><code>add_balance</code></a></li>
+<li><a href="pallets/market.html#withdraw_balance"><code>withdraw_balance</code></a></li>
+<li><a href="pallets/market.html#settle_deal_payments"><code>settle_deal_payments</code></a></li>
+<li><a href="pallets/market.html#publish_storage_deals"><code>publish_storage_deals</code></a></li>
+</ul>
+</li>
+<li><a href="pallets/market.html#events">Events</a></li>
+<li><a href="pallets/market.html#errors">Errors</a></li>
+<li><a href="pallets/market.html#constants">Constants</a></li>
+</ul>
+<h2 id="overview-1"><a class="header" href="#overview-1">Overview</a></h2>
+<p>The purpose of the pallet is to manage storage deals between storage market participants and to track their funds.
+Market Pallet is tightly coupled with <a href="pallets/./storage-provider.html">Storage Provider Pallet</a> because it's a source of truth for deals.
+Storage Provider Pallet cannot exist without deal information from Market Pallet.</p>
+<h2 id="extrinsics"><a class="header" href="#extrinsics">Extrinsics<a href="pallets/../glossary.html#extrinsics"><sup>*</sup></a></a></h2>
+<h3 id="add_balance"><a class="header" href="#add_balance"><code>add_balance</code></a></h3>
+<p>Reserves a given amount of currency for usage in the Storage Market.</p>
+<p>The reserved amount will be considered <code>free</code> until it is used in a deal when moved to <code>locked</code> and used to pay for the deal.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>amount</code></td><td>The amount to be reserved</td><td>Positive integer</td></tr>
+</tbody></table>
+</div>
+<h4 id="example-13"><a class="header" href="#example-13"><a id="add_balance.example" href="pallets/market.html#add_balance.example" class="header">Example</a></a></h4>
+<p>Using the <code>storagext-cli</code> you can add 1000000000<sup class="footnote-reference"><a href="#existential_deposit">1</a></sup> <a href="pallets/../glossary.html#planck">Plancks</a> to Alice's account with the following command<sup class="footnote-reference"><a href="#add_balance">2</a></sup>:</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" market add-balance 1000000000
+</code></pre>
+<div class="footnote-definition" id="existential_deposit"><sup class="footnote-definition-label">1</sup>
+<p>This value is the minimum amount due to Polkadot's existential deposit.
+You can read more about it at <a href="https://support.polkadot.network/support/solutions/articles/65000168651-what-is-the-existential-deposit-">https://support.polkadot.network/support/solutions/articles/65000168651-what-is-the-existential-deposit-</a>.</p>
+</div>
+<div class="footnote-definition" id="add_balance"><sup class="footnote-definition-label">2</sup>
+<p>Read more about the <code>add-balance</code> command in <a href="pallets/../storagext-cli/market.html#add-balance"><em>Storagext CLI/Subcommand <code>market</code>/<code>add-balance</code></em></a></p>
+</div>
+<h3 id="withdraw_balance"><a class="header" href="#withdraw_balance"><code>withdraw_balance</code></a></h3>
+<p>Withdraws funds from the Storage Market.</p>
+<p>The funds will be withdrawn from the <code>free</code> balance, meaning that the <code>amount</code> must be
+lesser than or equal to <code>free</code> and greater than 0 (\({free} \ge {amount} \gt 0\)).</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>amount</code></td><td>The amount to be withdrawn</td><td>Positive integer</td></tr>
+</tbody></table>
+</div>
+<h4 id="example-14"><a class="header" href="#example-14"><a id="withdraw_balance.example" href="pallets/market.html#withdraw_balance.example" class="header">Example</a></a></h4>
+<p>Using the <code>storagext-cli</code> you can withdraw 10000 <a href="pallets/../glossary.html#planck">Plancks</a> from Alice's <code>free</code> balance using the following command<sup class="footnote-reference"><a href="#withdraw_balance">3</a></sup>:</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" market withdraw-balance 10000
+</code></pre>
+<div class="footnote-definition" id="withdraw_balance"><sup class="footnote-definition-label">3</sup>
+<p>Read more about the <code>withdraw-balance</code> command in <a href="pallets/../storagext-cli/market.html#withdraw-balance"><em>Storagext CLI/Subcommand <code>market</code>/<code>withdraw-balance</code></em></a></p>
+</div>
+<h3 id="publish_storage_deals"><a class="header" href="#publish_storage_deals"><code>publish_storage_deals</code></a></h3>
+<p>Publishes list of deals to the chain.</p>
+<p>This extrinsic <em>must</em> be called by a storage provider.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>proposal</code></td><td>Specific deal proposal, a JSON object</td><td>JSON object, specified in the <a href="pallets/market.html#deal-proposal-components">next section</a></td></tr>
+<tr><td><code>client_signature</code></td><td>Client signature of this specific deal proposal</td><td><a href="https://paritytech.github.io/polkadot-sdk/master/sp_runtime/enum.MultiSignature.html"><code>MultiSignature</code></a>, meaning a 64-byte array for Sr25519 and Ed25519 signatures and 65-byte array for ECDSA signatures</td></tr>
+</tbody></table>
+</div>
+<p>The <code>client_signature</code>, as the name indicates, is generated by the client by signing the deal proposal with their private key —
+the <a href="pallets/../storagext-cli/index.html"><code>storagext-cli</code></a> does this for the user automatically<sup class="footnote-reference"><a href="#warn">4</a></sup>.
+This signature ensures that the storage provider cannot forge a deal with an arbitrary client.
+The type of signature is dependent on the key the signer has, currently supported key types are Sr25519, ECDSA and Ed25519.</p>
+<p><em>This step corresponds to the "sign &amp; send proposal" step in the <a href="pallets/./index.html#figure-overview">deal overview</a>.</em></p>
+<h4 id="deal-proposal-components"><a class="header" href="#deal-proposal-components">Deal Proposal Components</a></h4>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>piece_cid</code></td><td>Byte encoded CID</td><td><a href="https://github.com/multiformats/cid">CID</a></td></tr>
+<tr><td><code>piece_size</code></td><td>Size of the piece</td><td>Positive integer</td></tr>
+<tr><td><code>client</code></td><td>SS58 address of the storage client</td><td><a href="https://docs.substrate.io/learn/accounts-addresses-keys/">SS58 address</a></td></tr>
+<tr><td><code>provider</code></td><td>SS58 address of the storage provider</td><td><a href="https://docs.substrate.io/learn/accounts-addresses-keys/">SS58 address</a></td></tr>
+<tr><td><code>label</code></td><td>Arbitrary client chosen label</td><td>String, with a maximum length of 128 characters</td></tr>
+<tr><td><code>start_block</code></td><td>Block number on which the deal should start</td><td>Positive integer</td></tr>
+<tr><td><code>end_block</code></td><td>Block number on which the deal should end</td><td>Positive integer, <code>end_block &gt; start_block</code></td></tr>
+<tr><td><code>storage_price_per_block</code></td><td>Price for the storage specified per block<sup class="footnote-reference"><a href="#storage_price_per_block">5</a></sup></td><td>Positive integer, in <a href="pallets/../glossary.html#planck">Plancks</a></td></tr>
+<tr><td><code>provider_collateral</code></td><td>Collateral which is slashed if the deal fails</td><td>Positive integer, in <a href="pallets/../glossary.html#planck">Plancks</a></td></tr>
+<tr><td><code>state</code></td><td>Deal state. Can only be set to <code>Published</code></td><td>String</td></tr>
+</tbody></table>
+</div>
+<p>See the <a href="https://spec.filecoin.io/#section-systems.filecoin_markets.onchain_storage_market.storage_deal_flow">original Filecoin specification</a> for details.</p>
+<h4 id="example-15"><a class="header" href="#example-15"><a id="publish_storage_deals.example" href="pallets/market.html#publish_storage_deals.example" class="header">Example</a></a></h4>
+<p>Using the <code>storagext-cli</code> you can publish deals with <code>//Alice</code> as the storage provider and <code>//Charlie</code> as the client by running the following command<sup class="footnote-reference"><a href="#publish_storage_deals">6</a></sup>:</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" market publish-storage-deals \
+  --client-sr25519-key "//Charlie" \
+  "@deals.json"
+</code></pre>
+<p>Where <code>deals.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">[
+  {
+    "piece_cid": "bafk2bzacecg3xxc4f2ql2hreiuy767u6r72ekdz54k7luieknboaakhft5rgk",
+    "piece_size": 1337,
+    "client": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+    "provider": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+    "label": "Super Cool (but secret) Plans for a new Polkadot Storage Solution",
+    "start_block": 69,
+    "end_block": 420,
+    "storage_price_per_block": 15,
+    "provider_collateral": 2000,
+    "state": "Published"
+  },
+  {
+    "piece_cid": "bafybeih5zgcgqor3dv6kfdtv3lshv3yfkfewtx73lhedgihlmvpcmywmua",
+    "piece_size": 1143,
+    "client": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+    "provider": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+    "label": "List of problematic (but flying) Boeing planes",
+    "start_block": 1010,
+    "end_block": 1997,
+    "storage_price_per_block": 1,
+    "provider_collateral": 3900,
+    "state": "Published"
+  }
+]
+</code></pre>
+<div class="warning">
+Notice how the CLI command doesn't take the <code>client_signature</code> parameter but a keypair that can sign it.
+<p>We are aware that this is <strong>not secure</strong>. However, the system is still under development
+and is <strong>not final</strong>; it is a testing tool.</p>
+</div>
+<div class="footnote-definition" id="storage_price_per_block"><sup class="footnote-definition-label">5</sup>
+<p>The formula to calculate the total price is as follows: \[total\_price = (end\_block - start\_block) * storage\_price\_per\_block\]</p>
+</div>
+<div class="footnote-definition" id="publish_storage_deals"><sup class="footnote-definition-label">6</sup>
+<p>Read more about the <code>publish-storage-deals</code> command in <a href="pallets/../storagext-cli/market.html#publish-storage-deals"><em>Storagext CLI/Subcommand <code>market</code>/<code>publish-storage-deals</code></em></a></p>
+</div>
+<div class="footnote-definition" id="warn"><sup class="footnote-definition-label">4</sup>
+<p>Take into account that the CLI is currently for demo purposes, the authors are aware that the command isn't safe since it requires the private keys of both parties.</p>
+</div>
+<h3 id="settle_deal_payments"><a class="header" href="#settle_deal_payments"><code>settle_deal_payments</code></a></h3>
+<p>Settle specified deals between providers and clients.</p>
+<p>Both clients and providers can call this extrinsic.
+However, since the settlement is the mechanism through which the provider gets paid,
+a client has no reason to call this extrinsic.
+Non-existing deal IDs will be ignored.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>deal_ids</code></td><td>List of the deal IDs to be settled</td><td>Array of integers</td></tr>
+</tbody></table>
+</div>
+<h4 id="example-16"><a class="header" href="#example-16"><a id="settle_deal_payments.example" href="pallets/market.html#settle_deal_payments.example" class="header">Example</a></a></h4>
+<p>Using the <code>storagext-cli</code> you can settle deal payments for IDs 97, 1010, 1337 and 42069 using the following command<sup class="footnote-reference"><a href="#settle_deal_payments">7</a></sup>:</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" market settle-deal-payments 97 1010 1337 42069
+</code></pre>
+<div class="footnote-definition" id="settle_deal_payments"><sup class="footnote-definition-label">7</sup>
+<p>Read more about the <code>settle-deal-payments</code> command in <a href="pallets/../storagext-cli/market.html#settle-deal-payments"><em>Storagext CLI/Subcommand <code>market</code>/<code>settle-deal-payments</code></em></a></p>
+</div>
+<h2 id="events"><a class="header" href="#events">Events</a></h2>
+<p>The Market Pallet emits the following events:</p>
+<ul>
+<li><code>BalanceAdded</code> - Indicates that some balance was added as <em>free</em> to the Market Pallet account for usage in the storage market.
+<ul>
+<li><code>who</code> - SS58 address of then account which added balance</li>
+<li><code>amount</code> - Amount added</li>
+</ul>
+</li>
+<li><code>BalanceWithdrawn</code> - Some balance was transferred (free) from the Market Account to the Participant's account.
+<ul>
+<li><code>who</code> - SS58 address of the account which had withdrawn the balance</li>
+<li><code>amount</code> - Amount withdrawn</li>
+</ul>
+</li>
+<li><code>DealPublished</code> - Indicates that a deal was successfully published with <code>publish_storage_deals</code>.
+<ul>
+<li><code>deal_id</code> - Unique deal ID</li>
+<li><code>client</code> - SS58 address of the storage client</li>
+<li><code>provider</code> - SS58 address of the storage provider</li>
+</ul>
+</li>
+<li><code>DealActivated</code> - Deal's state has changed to <code>Active</code>.
+<ul>
+<li><code>deal_id</code> - Unique deal ID</li>
+<li><code>client</code> - SS58 address of the storage client</li>
+<li><code>provider</code> - SS58 address of the storage provider</li>
+</ul>
+</li>
+<li><code>DealsSettled</code> - Published after the <code>settle_deal_payments</code> extrinsic is called. Indicates which deals were successfully and unsuccessfully settled.
+<ul>
+<li><code>successful</code> - List of deal IDs that were settled</li>
+<li><code>unsuccessful</code> - List of deal IDs with the corresponding errors</li>
+</ul>
+</li>
+<li><code>DealSlashed</code> - Is emitted when some deal expired
+<ul>
+<li><code>deal_id</code> - Deal ID that was slashed</li>
+</ul>
+</li>
+<li><code>DealTerminated</code> - Is emitted it indicates that the deal was voluntarily or involuntarily terminated.
+<ul>
+<li><code>deal_id</code> - Terminated deal ID</li>
+<li><code>client</code> - SS58 address of the storage client</li>
+<li><code>provider</code> - SS58 address of the storage provider</li>
+</ul>
+</li>
+</ul>
+<h2 id="errors"><a class="header" href="#errors">Errors</a></h2>
+<p>The Market Pallet actions can fail with following errors:</p>
+<ul>
+<li><code>InsufficientFreeFunds</code> - Market participants do not have enough free funds.</li>
+<li><code>NoProposalsToBePublished</code> - <code>publish_storage_deals</code> was called with an empty list of <code>deals</code>.</li>
+<li><code>ProposalsNotPublishedByStorageProvider</code> - Is returned when calling <code>publish_storage_deals</code> and the deals in a list are not published by the same storage provider.</li>
+<li><code>AllProposalsInvalid</code> - <code>publish_storage_deals</code> call was supplied with a list of <code>deals</code> which are all invalid.</li>
+<li><code>DuplicateDeal</code> - There is more than one deal with this ID in the Sector.</li>
+<li><code>DealNotFound</code> - Tried to activate a deal that is not in the system.</li>
+<li><code>DealActivationError</code> - Tried to activate a deal, but data was malformed.
+<ul>
+<li>Invalid specified provider.</li>
+<li>The deal already expired.</li>
+<li>Sector containing the deal expires before the deal.</li>
+<li>Invalid deal state.</li>
+<li>Deal is not pending.</li>
+</ul>
+</li>
+<li><code>DealsTooLargeToFitIntoSector</code> - Sum of all deals piece sizes for a sector exceeds sector size. The sector size is based on the registered proof type. We currently only support registered <code>StackedDRG2KiBV1P1</code> proofs, which have 2KiB sector sizes.</li>
+<li><code>TooManyDealsPerBlock</code> - Tried to activate too many deals at a given <code>start_block</code>.</li>
+<li><code>UnexpectedValidationError</code> - <code>publish_storage_deals</code>'s core logic was invoked with a broken invariant that <code>validate_deals</code> should call. Report an issue if you receive this error.</li>
+<li><code>DealPreconditionFailed</code> - Due to a programmer bug. Report an issue if you receive this error.</li>
+</ul>
+<h2 id="constants"><a class="header" href="#constants">Constants</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Value</th></tr></thead><tbody>
+<tr><td><code>MaxDeals</code></td><td>How many deals can be published in a single batch of <code>publish_storage_deals</code>.</td><td>128</td></tr>
+<tr><td><code>MaxDealsPerBlock</code></td><td>Maximum deals that can be scheduled to start at the same block.</td><td>128</td></tr>
+<tr><td><code>MinDealDuration</code></td><td>Minimum time an activated deal should last.</td><td>5 Minutes</td></tr>
+<tr><td><code>MaxDealDuration</code></td><td>Maximum time an activated deal should last.</td><td>180 Minutes</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="storage-provider-pallet"><a class="header" href="#storage-provider-pallet">Storage Provider Pallet</a></h1>
+<h2 id="table-of-contents-1"><a class="header" href="#table-of-contents-1">Table of Contents</a></h2>
+<ul>
+<li><a href="pallets/storage-provider.html#overview">Overview</a></li>
+<li><a href="pallets/storage-provider.html#usage">Usage</a>
+<ul>
+<li><a href="pallets/storage-provider.html#declaring-storage-faults-and-recoveries">Declaring storage faults and recoveries</a></li>
+</ul>
+</li>
+<li><a href="pallets/storage-provider.html#extrinsics">Extrinsics</a>
+<ul>
+<li><a href="pallets/storage-provider.html#register_storage_provider"><code>register_storage_provider</code></a></li>
+<li><a href="pallets/storage-provider.html#pre_commit_sector"><code>pre_commit_sector</code></a></li>
+<li><a href="pallets/storage-provider.html#prove_commit_sector"><code>prove_commit_sector</code></a></li>
+<li><a href="pallets/storage-provider.html#submit_windowed_post"><code>submit_windowed_post</code></a></li>
+<li><a href="pallets/storage-provider.html#declare_faults"><code>declare_faults</code></a></li>
+<li><a href="pallets/storage-provider.html#declare_faults_recovered"><code>declare_faults_recovered</code></a></li>
+</ul>
+</li>
+<li><a href="pallets/storage-provider.html#events">Events</a></li>
+<li><a href="pallets/storage-provider.html#errors">Errors</a></li>
+<li><a href="pallets/storage-provider.html#pallet-constants">Pallet constants</a></li>
+</ul>
+<h2 id="overview-2"><a class="header" href="#overview-2">Overview</a></h2>
+<p>The <code>Storage Provider Pallet</code> handles the creation of storage providers and facilitates storage providers and clients in creating storage deals.
+Storage providers must provide the <a href="pallets/../glossary.html#post">Proof of Space-time (PoSt)</a> and the <a href="pallets/../glossary.html#porep">Proof of Replication (PoRep)</a>
+to the <code>Storage Provider Pallet</code> to prevent the pallet from imposing penalties on storage providers through <a href="pallets/storage-provider.html#storage-fault-slashing">slashing</a>.</p>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<h3 id="declaring-storage-faults-and-recoveries"><a class="header" href="#declaring-storage-faults-and-recoveries">Declaring storage faults and recoveries</a></h3>
+<p>Faulty sectors are subject to penalties. To minimize said penalties, the storage provider should declare any sector for which they cannot
+generate a <a href="pallets/../glossary.html#post">PoSt</a> as faulty, this will mask said sectors in future deadlines, minimizing the suffered penalties.
+A storage provider must declare the sector as faulty <a href="pallets/storage-provider.html#fault-declaration-cutoff"><strong>before</strong></a> the challenge window.</p>
+<p>Through the <a href="pallets/storage-provider.html#declare_faults"><code>declare_faults</code></a> and <a href="pallets/storage-provider.html#declare_faults_recovered"><code>declare_faults_recovered</code></a> extrinsics
+the storage provider can declare sectors as faulty or recovered<sup class="footnote-reference"><a href="#recovered">1</a></sup>.</p>
+<img src="pallets/../images/storage-provider/faults.svg" alt="Declaring faults and recoveries">
+<div class="footnote-definition" id="recovered"><sup class="footnote-definition-label">1</sup>
+<p>Recovered sectors still require being proven before they can become fully active again.</p>
+</div>
+<p>Substrate pallet hooks execute actions when certain conditions are met.</p>
+<p>Substrate pallet hooks execute some actions when certain conditions are met.
+We use these hooks — when a block finalizes — to check if storage providers are up to date with their proofs.
+If a storage provider fails to submit proof on time, the Storage Provider pallet will signal the Market pallet to penalize the storage provider.
+Accordingly, removing and burning the collateral locked up during the pre-commit.</p>
+<h2 id="extrinsics-1"><a class="header" href="#extrinsics-1">Extrinsics</a></h2>
+<h3 id="register_storage_provider"><a class="header" href="#register_storage_provider"><code>register_storage_provider</code></a></h3>
+<p>Storage Provider registration is the first extrinsic any storage provider must call. Without being registered, other extrinsics will return an error.</p>
+<p>Before a storage provider can register, they must set up a <a href="https://docs.libp2p.io/concepts/fundamentals/peers/#peer-id">PeerId</a>. This <a href="https://docs.libp2p.io/concepts/fundamentals/peers/#peer-id">PeerId</a> is used in the p2p network to connect to the storage provider.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>peer_id</code></td><td><a href="https://libp2p.io/">libp2p</a> <a href="https://docs.libp2p.io/concepts/fundamentals/peers/">ID</a></td><td>Hex string of the PeerId bytes</td></tr>
+<tr><td><code>window_post_proof_type</code></td><td>Proof type the storage provider uses</td><td>String, currently only <code>StackedDRGWindow2KiBV1P1</code> is available</td></tr>
+</tbody></table>
+</div>
+<h4 id="example-17"><a class="header" href="#example-17"><a class="header" id="register_storage_provider.example" href="pallets/storage-provider.html#register_storage_provider.example">Example</a></a></h4>
+<p>Registering a storage provider with keypair <code>//Alice</code> and peer ID <code>alice</code> with the following command<sup class="footnote-reference"><a href="#register_storage_provider">2</a></sup>:</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider register alice
+</code></pre>
+<div class="footnote-definition" id="register_storage_provider"><sup class="footnote-definition-label">2</sup>
+<p>Read more about the <code>register</code> command in <a href="pallets/../storagext-cli/storage-provider.html#register"><em>Storagext CLI/Subcommand <code>storage-provider</code>/<code>register</code></em></a></p>
+</div>
+<h3 id="pre_commit_sector"><a class="header" href="#pre_commit_sector"><code>pre_commit_sector</code></a></h3>
+<p>After publishing a deal, the storage provider needs to pre-commit the sector information to the chain.
+Sectors are not valid after pre-commit. The sectors need to be proven first.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>seal_proof</code></td><td>Seal proof type this storage provider is using <sup class="footnote-reference"><a href="#note">3</a></sup></td><td>String, currently only <code>StackedDRGWindow2KiBV1P1</code> is available</td></tr>
+<tr><td><code>sector_number</code></td><td>The sector number that is being pre-committed</td><td>Positive integer</td></tr>
+<tr><td><code>sealed_cid</code></td><td><a href="pallets/../glossary.html#commitment-of-replication">Commitment of replication</a></td><td>Hex string of the sealed CID bytes</td></tr>
+<tr><td><code>deal_ids</code></td><td>Deal IDs to be pre-committed, from <code>publish_storage_deals</code></td><td>Array of integers</td></tr>
+<tr><td><code>expiration</code></td><td>Expiration block of the pre-committed sector</td><td>Positive integer</td></tr>
+<tr><td><code>unsealed_cid</code></td><td>Commitment of data <a href="pallets/../glossary.html#commitment-of-data">sector sealing</a></td><td>Hex string of the unsealed CID bytes</td></tr>
+</tbody></table>
+</div><div class="warning">
+Sectors are not valid after pre-commit. The sectors need to be proven first.
+</div>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">3</sup>
+<p>Only one seal-proof type supported at the moment, <code>2KiB</code>.</p>
+</div>
+<h4 id="example-18"><a class="header" href="#example-18"><a class="header" id="pre_commit_sector.example" href="pallets/storage-provider.html#pre_commit_sector.example">Example</a></a></h4>
+<p>Storage provider <code>//Alice</code> pre-committing<sup class="footnote-reference"><a href="#pre_commit_sector">4</a></sup> a sector number 1, with a single deal ID 0.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider pre-commit @pre-commit-sector.json
+</code></pre>
+<p>Where <code>pre-commit-sector.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">{
+  "sector_number": 1,
+  "sealed_cid": "bafk2bzaceajreoxfdcpdvitpvxm7vkpvcimlob5ejebqgqidjkz4qoug4q6zu",
+  "deal_ids": [0],
+  "expiration": 100,
+  "unsealed_cid": "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+  "seal_proof": "StackedDRG2KiBV1P1"
+}
+</code></pre>
+<div class="footnote-definition" id="pre_commit_sector"><sup class="footnote-definition-label">4</sup>
+<p>Read more about the <code>pre-commit</code> command in <a href="pallets/../storagext-cli/storage-provider.html#pre-commit"><em>Storagext CLI/Subcommand <code>storage-provider</code>/<code>pre-commit</code></em></a></p>
+</div>
+<h3 id="prove_commit_sector"><a class="header" href="#prove_commit_sector"><code>prove_commit_sector</code></a></h3>
+<p>After pre-committing some new sectors the storage provider needs to supply a <a href="pallets/../glossary.html#commitment-of-replication">Proof-of-Replication</a> for these sectors <sup class="footnote-reference"><a href="#note">3</a></sup>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>sector_number</code></td><td>The sector number that is being prove-committed</td><td>Positive integer</td></tr>
+<tr><td><code>proof</code></td><td>The <a href="pallets/../glossary.html#commitment-of-replication">proof of replication</a></td><td>Hex string of the proof bytes</td></tr>
+</tbody></table>
+</div>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">3</sup>
+<p>At the moment, any proof of non-zero length is accepted for PoRep.</p>
+</div>
+<h4 id="example-19"><a class="header" href="#example-19"><a class="header" id="prove_commit_sector.example" href="pallets/storage-provider.html#prove_commit_sector.example">Example</a></a></h4>
+<p>This example follows up on the pre-commit example. Storage provider <code>//Alice</code> is proven committing<sup class="footnote-reference"><a href="#prove_commit_sector">5</a></sup> sector number 1.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider prove-commit @prove-commit-sector.json
+</code></pre>
+<p>Where <code>prove-commit-sector.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">{
+  "sector_number": 1,
+  "proof": "1230deadbeef"
+}
+</code></pre>
+<div class="footnote-definition" id="prove_commit_sector"><sup class="footnote-definition-label">5</sup>
+<p>Read more about the <code>prove-commit</code> command in <a href="pallets/../storagext-cli/storage-provider.html#prove-commit"><em>Storagext CLI/Subcommand <code>storage-provider</code>/<code>prove-commit</code></em></a></p>
+</div>
+<h3 id="submit_windowed_post"><a class="header" href="#submit_windowed_post"><code>submit_windowed_post</code></a></h3>
+<p>A storage provider needs to periodically submit a <a href="pallets/../glossary.html#proofs">Proof-of-Spacetime</a> to prove that they are still storing the data they promised. Multiple proofs can be submitted at once.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>deadline</code></td><td>The deadline index which the submission targets</td><td>Positive integer</td></tr>
+<tr><td><code>partitions</code></td><td>The partitions being proven</td><td>Array of positive integers</td></tr>
+<tr><td><code>post_proof</code></td><td>The proof type, should be consistent with the proof type for registration</td><td>String, currently only <code>StackedDRGWindow2KiBV1P1</code> is available</td></tr>
+<tr><td><code>proof_bytes</code></td><td>The proof submission, to be checked in the storage provider pallet.</td><td>Hex string of the proof bytes</td></tr>
+</tbody></table>
+</div>
+<h4 id="example-20"><a class="header" href="#example-20"><a class="header" id="submit_windowed_post.example" href="pallets/storage-provider.html#submit_windowed_post.example">Example</a></a></h4>
+<p>Storage provider <code>//Alice</code> submitting<sup class="footnote-reference"><a href="#submit_windowed_post">6</a></sup> proof for deadline 0, partition 0.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider submit-windowed-post @submit-windowed-post.json
+</code></pre>
+<p>Where <code>submit-windowed-post.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">{
+  "deadline": 0,
+  "partition": [0],
+  "proof": {
+    "post_proof": "2KiB",
+    "proof_bytes": "1230deadbeef"
+  }
+}
+</code></pre>
+<div class="footnote-definition" id="submit_windowed_post"><sup class="footnote-definition-label">6</sup>
+<p>Read more about the <code>submit-windowed-post</code> command in <a href="pallets/../storagext-cli/storage-provider.html#submit-windowed-post"><em>Storagext CLI/Subcommand <code>storage-provider</code>/<code>submit-windowed-post</code></em></a></p>
+</div>
+<h3 id="declare_faults"><a class="header" href="#declare_faults"><code>declare_faults</code></a></h3>
+<p>A storage provider can declare faults when they know they cannot submit PoSt on time to prevent getting penalized.
+Faults have an expiry of 42 days.
+The sectors will be terminated if the faults have not been recovered before this time.
+Multiple faults can be declared at once.</p>
+<p><code>declare_faults</code> can take in multiple fault declarations:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>faults</code></td><td>The fault declarations</td><td>Array of the fault declarations, described below</td></tr>
+</tbody></table>
+</div>
+<p>Where the fault declarations contain:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>deadline</code></td><td>The deadline to which the faulty sectors are assigned</td><td>Positive integer</td></tr>
+<tr><td><code>partition</code></td><td>Partition index within the deadline containing the faulty sectors.</td><td>Positive integer</td></tr>
+<tr><td><code>sectors</code></td><td>Sectors in the partition being declared faulty</td><td>Set of positive integers</td></tr>
+</tbody></table>
+</div>
+<h4 id="example-21"><a class="header" href="#example-21"><a class="header" id="declare_faults.example" href="pallets/storage-provider.html#declare_faults.example">Example</a></a></h4>
+<p>Storage provider <code>//Alice</code> declaring faults<sup class="footnote-reference"><a href="#declare_faults">7</a></sup> on deadline 0, partition 0, sector 1.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider declare-faults @fault-declaration.json
+</code></pre>
+<p>Where <code>fault-declaration.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">[
+  {
+    "deadline": 0,
+    "partition": 0,
+    "sectors": [1]
+  }
+]
+</code></pre>
+<div class="footnote-definition" id="declare_faults"><sup class="footnote-definition-label">7</sup>
+<p>Read more about the <code>declare-faults</code> command in <a href="pallets/../storagext-cli/storage-provider.html#declare-faults"><em>Storagext CLI/Subcommand <code>storage-provider</code>/<code>declare-faults</code></em></a></p>
+</div>
+<h3 id="declare_faults_recovered"><a class="header" href="#declare_faults_recovered"><code>declare_faults_recovered</code></a></h3>
+<p>After declaring sectors as faulty, a storage provider can recover them.
+The storage provider must recover the faults if the system has marked some sectors as faulty due to a missing PoSt.
+Faults are not fully recovered until the storage provider submits a valid PoSt after the <code>declare_faults_recovered</code> extrinsic.</p>
+<p><code>declare_faults_recovered</code> can take in multiple fault recoveries:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>recoveries</code></td><td>The fault recoveries</td><td>Array of the fault recovery declarations, described below</td></tr>
+</tbody></table>
+</div>
+<p>Where the fault recoveries contain:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>deadline</code></td><td>The deadline to which the recovered sectors are assigned</td><td>Positive integer</td></tr>
+<tr><td><code>partition</code></td><td>Partition index within the deadline containing the recovered sectors</td><td>Positive integer</td></tr>
+<tr><td><code>sectors</code></td><td>Sectors in the partition being declared recovered</td><td>Set of positive integers</td></tr>
+</tbody></table>
+</div>
+<h4 id="example-22"><a class="header" href="#example-22"><a class="header" id="declare_faults_recovered.example" href="pallets/storage-provider.html#declare_faults_recovered.example">Example</a></a></h4>
+<p>Storage provider <code>//Alice</code> declaring recoveries<sup class="footnote-reference"><a href="#declare_faults_recovered">8</a></sup> on deadline 0, partition 0, sector 1.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider declare-faults-recovered @fault-declaration.json
+</code></pre>
+<p>Where <code>fault-declaration.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">[
+  {
+    "deadline": 0,
+    "partition": 0,
+    "sectors": [1]
+  }
+]
+</code></pre>
+<div class="footnote-definition" id="declare_faults_recovered"><sup class="footnote-definition-label">8</sup>
+<p>Read more about the <code>declare-faults-recovered</code> command in <a href="pallets/../storagext-cli/storage-provider.html#declare-faults-recovered"><em>Storagext CLI/Subcommand <code>storage-provider</code>/<code>declare-faults-recovered</code></em></a></p>
+</div>
+<h2 id="events-1"><a class="header" href="#events-1">Events</a></h2>
+<p>The Storage Provider Pallet emits the following events:</p>
+<ul>
+<li><code>StorageProviderRegistered</code> - Indicates that a new storage provider has been registered.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>info</code> - The static information about the new storage provider. This information includes:
+<ul>
+<li><code>peer_id</code> - Libp2p identity that should be used when connecting to the storage provider.</li>
+<li><code>window_post_proof_type</code> - The proof type used by the storage provider for sealing sectors.</li>
+<li><code>sector_size</code> - Amount of space in each sector committed to the network by the storage provider.</li>
+<li><code>window_post_partition_sectors</code> - The number of sectors in each Window PoSt partition (proof).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>SectorPreCommitted</code> - A storage provider has pre-committed some new sector after publishing some new deal.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>sector</code> - The sector number being pre-committed.</li>
+</ul>
+</li>
+<li><code>SectorProven</code> - A storage provider has proven a sector that they previously pre-committed.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>sector_number</code> - The sector number that was proven.</li>
+</ul>
+</li>
+<li><code>SectorSlashed</code> - A previously pre-committed sector, but not proven, has been slashed by the system because it has expired.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>sector_number</code> - The sector number that has been slashed because of expiry.</li>
+</ul>
+</li>
+<li><code>ValidPoStSubmitted</code> - A valid PoSt has been submitted by a storage provider.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+</ul>
+</li>
+<li><code>FaultsDeclared</code> - A storage provider has declared some sectors as faulty.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>faults</code> - An array with information about the fault declarations. This information includes:
+<ul>
+<li><code>deadline</code> - The deadline to which the faulty sectors are assigned.</li>
+<li><code>partition</code> - Partition number within the deadline containing the faulty sectors.</li>
+<li><code>sectors</code> - Sectors in the partition being declared as faulty.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>FaultsRecovered</code> - A storage provider has recovered some sectors previously declared as faulty.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>recoveries</code> - An array with information about the fault recoveries. This information includes:
+<ul>
+<li><code>deadline</code> - The deadline to which the recovered sectors are assigned.</li>
+<li><code>partition</code> - Partition number within the deadline containing the recovered sectors.</li>
+<li><code>sectors</code> - Sectors in the partition being declared as recovered.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>PartitionFaulty</code> - It was detected that a storage provider has not submitted their PoSt on time and has marked some sectors as faulty.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>partition</code> - Partition number for which the PoSt was missed.</li>
+<li><code>sectors</code> - The sectors in the partition declared faulty by the system.</li>
+</ul>
+</li>
+</ul>
+<h2 id="errors-1"><a class="header" href="#errors-1">Errors</a></h2>
+<p>The Storage Provider Pallet actions can fail with the following errors:</p>
+<ul>
+<li><code>StorageProviderExists</code> - A storage provider is already registered and tries to register again.</li>
+<li><code>StorageProviderNotFound</code> - This error is emitted by all extrinsics except registration in the storage provider pallet when a storage provider tries to call an extrinsic without registering first.</li>
+<li><code>InvalidSector</code> - This error can be emitted when:
+<ul>
+<li>A storage provider supplies a sector number during pre-commit exceeding the maximum number of sectors.</li>
+<li>A storage provider supplies a sector number during proof commit that exceeds the maximum amount of sectors.</li>
+</ul>
+</li>
+<li><code>InvalidProofType</code> - This error can be emitted when:
+<ul>
+<li>A storage provider submits a seal-proof type during pre-commit that is different than the one configured during registration.</li>
+<li>During a prove commit extrinsic, the proof type supplied by the storage provider is invalid.</li>
+<li>A storage provider submits a windowed PoSt proof type that is different from the one configured during registration.</li>
+</ul>
+</li>
+<li><code>NotEnoughFunds</code> - Emitted when a storage provider does not have enough funds for the pre-commit deposit.</li>
+<li><code>SectorNumberAlreadyUsed</code> - A storage provider tries to pre-commit a sector number that has already been used.</li>
+<li><code>ExpirationBeforeActivation</code> - A storage provider tries to pre-commit a sector where that sector expires before activation.</li>
+<li><code>ExpirationTooSoon</code> - A storage provider tries to pre-commit a sector with a total lifetime less than MinSectorExpiration.</li>
+<li><code>ExpirationTooLong</code> - A storage provider tries to pre-commit a sector with an expiration that exceeds <code>MaxSectorExpirationExtension</code>.</li>
+<li><code>MaxSectorLifetimeExceeded</code> - A storage provider tries to pre-commit a sector with a total lifetime that exceeds <code>SectorMaximumLifetime</code>.</li>
+<li><code>InvalidCid</code> - Emitted when a storage provider submits an invalid unsealed CID when trying to pre-commit a sector.</li>
+<li><code>ProveCommitAfterDeadline</code> - A storage provider has tried to prove a previously pre-committed sector after the proving deadline.</li>
+<li><code>PoStProofInvalid</code> - A proof that the storage provider submitted is invalid. Currently, this error is emitted when the proof length is 0.</li>
+<li><code>InvalidUnsealedCidForSector</code> - This error is emitted when the declared unsealed_cid for pre_commit is different from the one calculated by the system.</li>
+<li><code>FaultDeclarationTooLate</code> - A fault declaration was submitted after the fault declaration cutoff. The fault declaration can be submitted after the upcoming deadline is closed.</li>
+<li><code>FaultRecoveryTooLate</code> - A fault recovery was submitted after the fault recovery cutoff. The fault recovery can be submitted after the upcoming deadline is closed.</li>
+<li><code>DeadlineError</code> - An error was encountered in the deadline module. If you encounter this error, please report an issue, as this is a programmer error.</li>
+<li><code>PartitionError</code> - An error was encountered in the partition module. If you encounter this error, please report an issue, as this is a programmer error.</li>
+<li><code>StorageProviderError</code> - An error was encountered in the storage provider module. If you encounter this error, please report an issue, as this is a programmer error.</li>
+<li><code>SectorMapError</code> - An error was encountered in the sector map module. These errors can be:
+<ul>
+<li><code>FailedToInsertSector</code> - Internal bounds violation with Sectors. If you encounter this error please report an issue as this is a programmer error.</li>
+<li><code>FailedToInsertPartition</code> - Internal bounds violation with partitions. If you encounter this error please report an issue as this is a programmer error.</li>
+</ul>
+</li>
+<li><code>CouldNotActivateSector</code> - Failure during prove commit when trying to convert a previously pre-committed sector due to a programming error. Please report an issue if you receive this error.</li>
+<li><code>CouldNotVerifySectorForPreCommit</code> - Failure during pre-commit due to the <a href="pallets/../glossary.html#commitment-of-data">commd</a> calculation failing due to a programming error. Please report an issue if you receive this error.</li>
+<li><code>SlashingFailed</code> - Slashing of funds fails due to a programmer error. Please report an issue if you receive this error.</li>
+<li><code>ConversionError</code> - Due to a programmer error. Please report an issue if you receive this error.</li>
+</ul>
+<h2 id="pallet-constants"><a class="header" href="#pallet-constants">Pallet constants</a></h2>
+<p>The Storage Provider Pallet has the following constants:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Value</th></tr></thead><tbody>
+<tr><td><code id="const-proving-period"><code>WPoStProvingPeriod</code></code></td><td>The average <a href="pallets/../glossary.html#proving-period">period</a> for proving all sectors maintained by a storage provider.</td><td>4 Minutes</td></tr>
+<tr><td><code id="const-challenge-window"><code>WPoStChallengeWindow</code></code></td><td>The period immediately before a deadline during which a challenge can be generated by the chain and the requisite proofs computed.</td><td>2 Minutes</td></tr>
+<tr><td><code>WPoStChallengeLookBack</code></td><td>This period allows the storage providers to start working on the <a href="pallets/../glossary.html#post">PoSt</a> before the deadline is officially opened to receiving a <a href="pallets/../glossary.html#post">PoSt</a>.</td><td>1 Minute</td></tr>
+<tr><td><code id="const-period-deadlines"><code>WPoStPeriodDeadlines</code></code></td><td>Represents how many challenge deadlines there are in one proving period. Closely tied to <code>WPoStChallengeWindow</code>.</td><td>48</td></tr>
+<tr><td><code>MinSectorExpiration</code></td><td>Minimum time past the current block a sector may be set to expire.</td><td>5 Minutes</td></tr>
+<tr><td><code>MaxSectorExpirationExtension</code></td><td>Maximum time past the current block a sector may be set to expire.</td><td>60 Minutes</td></tr>
+<tr><td><code>SectorMaximumLifetime</code></td><td>Maximum time a sector can stay in pre-committed state.</td><td>120 Minutes</td></tr>
+<tr><td><code>MaxProveCommitDuration</code></td><td>Maximum time between <a href="pallets/storage-provider.html#pre_commit_sector">pre-commit</a> and <a href="pallets/storage-provider.html#prove_commit_sector">proving</a> the committed sector.</td><td>5 Minutes</td></tr>
+<tr><td><code>MaxPartitionsPerDeadline</code></td><td>Maximum number of partitions that can be assigned to a single deadline.</td><td>3000</td></tr>
+<tr><td><code>FaultMaxAge</code></td><td>Maximum time a <a href="pallets/../glossary.html#fault">fault</a> can exist before being removed by the pallet.</td><td>210 Minutes</td></tr>
+<tr><td><code id="fault-declaration-cutoff">FaultDeclarationCutoff</code></td><td>Time before a deadline opens that a storage provider can declare or recover a fault.</td><td>2 Minutes</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="glossary-and-anti-glossary"><a class="header" href="#glossary-and-anti-glossary">Glossary and Anti-Glossary</a></h1>
+<p>This document provides definitions and explanations for terms used throughout the project and a list of terms that should not be used.</p>
+<h2 id="table-of-contents-2"><a class="header" href="#table-of-contents-2">Table of Contents</a></h2>
+<ul>
+<li><a href="glossary.html#glossary-and-anti-glossary">Glossary and Anti-Glossary</a>
+<ul>
+<li><a href="glossary.html#table-of-contents">Table of Contents</a></li>
+<li><a href="glossary.html#glossary">Glossary</a>
+<ul>
+<li><a href="glossary.html#actor">Actor</a></li>
+<li><a href="glossary.html#bond">Bond</a></li>
+<li><a href="glossary.html#collateral">Collateral</a></li>
+<li><a href="glossary.html#collator">Collator</a></li>
+<li><a href="glossary.html#committed-capacity">Committed Capacity</a></li>
+<li><a href="glossary.html#commitment-of-data">Commitment of Data</a></li>
+<li><a href="glossary.html#commitment-of-replication">Commitment of Replication</a></li>
+<li><a href="glossary.html#crowdloan">Crowdloan</a></li>
+<li><a href="glossary.html#deadline">Deadline</a></li>
+<li><a href="glossary.html#extrinsics">Extrinsics</a></li>
+<li><a href="glossary.html#fault">Fault</a></li>
+<li><a href="glossary.html#full-node">Full Node</a></li>
+<li><a href="glossary.html#invulnerable">Invulnerable</a></li>
+<li><a href="glossary.html#node">Node</a></li>
+<li><a href="glossary.html#parachain">Parachain</a></li>
+<li><a href="glossary.html#partition">Partition</a></li>
+<li><a href="glossary.html#planck">Planck</a></li>
+<li><a href="glossary.html#polkadot">Polkadot</a></li>
+</ul>
+</li>
+<li><a href="glossary.html#proofs">Proofs</a>
+<ul>
+<li><a href="glossary.html#proving-period">Proving Period</a></li>
+<li><a href="glossary.html#relay-chain">Relay Chain</a></li>
+<li><a href="glossary.html#sector">Sector</a></li>
+<li><a href="glossary.html#session">Session</a></li>
+<li><a href="glossary.html#slashing">Slashing</a></li>
+<li><a href="glossary.html#slot-auction">Slot Auction</a></li>
+<li><a href="glossary.html#staking">Staking</a></li>
+<li><a href="glossary.html#storage-provider">Storage Provider</a></li>
+<li><a href="glossary.html#storage-user">Storage User</a></li>
+<li><a href="glossary.html#system-parachain">System Parachain</a></li>
+</ul>
+</li>
+<li><a href="glossary.html#anti-glossary">Anti-Glossary</a>
+<ul>
+<li><a href="glossary.html#term-to-avoid-miner">Term to Avoid: Miner</a></li>
+<li><a href="glossary.html#term-to-avoid-pledge">Term to Avoid: Pledge</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="glossary"><a class="header" href="#glossary">Glossary</a></h2>
+<p>This section lists terms used throughout the project.</p>
+<h3 id="actor"><a class="header" href="#actor">Actor</a></h3>
+<p>In <a href="https://spec.filecoin.io/#section-glossary.filecoin">Filecoin</a>,
+an <a href="https://spec.filecoin.io/#section-glossary.actor">actor</a> is an on-chain object with its state and set of
+methods. <a href="https://spec.filecoin.io/#section-glossary.actor">Actors</a> define how
+the <a href="https://spec.filecoin.io/#section-glossary.filecoin">Filecoin</a> network manages and updates its global state.</p>
+<h3 id="bond"><a class="header" href="#bond">Bond</a></h3>
+<p>This term is used in:</p>
+<ul>
+<li>
+<p>Parachain <a href="glossary.html#slot-auction">Slot Auction</a>. To bid in an auction, <a href="glossary.html#parachain">parachain</a> teams agree to lock up (or
+bond) a portion of DOT tokens for the duration of the lease. While bonded for a lease, the DOT cannot be used for
+other activities like staking or transfers.</p>
+</li>
+<li>
+<p><a href="glossary.html#collator">Collator</a> slot auction (selection mechanism). It is used as a deposit to become a collator. Candidates can
+register by placing the minimum bond. Then, if an account wants to participate in the <a href="glossary.html#collator">collator</a> slot
+auction, they have to replace an existing candidate by placing a more significant deposit (bond).</p>
+</li>
+</ul>
+<h3 id="collateral"><a class="header" href="#collateral">Collateral</a></h3>
+<p><a href="https://spec.filecoin.io/#section-glossary.collateral">Collaterals</a> are assets locked up or deposited as a form of security
+to mitigate risks and ensure the performance of specific actions. Collateral acts as a guarantee that an
+individual will fulfil their obligations. Failing to meet obligations or behaving maliciously can result in the loss of
+staked assets or collateral as a penalty for non-compliance or misconduct by <a href="glossary.html#slashing">slashing</a>.</p>
+<h3 id="collator"><a class="header" href="#collator">Collator</a></h3>
+<p><a href="https://wiki.polkadot.network/docs/learn-collator">Collators</a> maintain <a href="glossary.html#parachain">parachains</a> by
+collecting <a href="glossary.html#parachain">parachain</a> transactions from users and producing state transition proofs
+for <a href="glossary.html#relay-chain">Relay Chain</a> validators. In other words, collators maintain <a href="glossary.html#parachain">parachains</a> by
+aggregating <a href="glossary.html#parachain">parachain</a> transactions into <a href="glossary.html#parachain">parachain</a> block candidates and producing state
+transition proofs (Proof-of-Validity, PoV) for validators. They must provide a financial
+commitment (<a href="glossary.html#collateral">collateral</a>) to ensure they are incentivized to perform their duties correctly and
+to dissuade malicious behaviour.</p>
+<h3 id="committed-capacity"><a class="header" href="#committed-capacity">Committed Capacity</a></h3>
+<p>The <a href="https://spec.filecoin.io/#section-glossary.capacity-commitment">Committed Capacity</a> (CC) is one of three types of
+deals in which there is effectively no deal, and the <a href="glossary.html#storage-provider">Storage Provider</a> stores random data inside the
+sector instead of customer data.</p>
+<p>If a <a href="glossary.html#storage-provider">storage provider</a> doesn't find any available deal proposals appealing, they can alternatively
+make a capacity commitment, filling a sector with arbitrary data, rather than with client data. Maintaining this sector
+allows the <a href="glossary.html#storage-provider">storage provider</a> to provably demonstrate that they are reserving space on behalf of the
+network.</p>
+<h3 id="commitment-of-data"><a class="header" href="#commitment-of-data">Commitment of Data</a></h3>
+<p>This value is also known as <code>commD</code> or <code>unsealed_cid</code>.
+As the storage miner receives each piece of client data, they place it into a sector. Sectors are the fundamental units of storage in Filecoin,
+and can contain pieces from multiple deals and clients.</p>
+<p>Once a sector is full, a CommD (Commitment of Data, aka UnsealedSectorCID) is produced, representing the root node of all the piece CIDs contained in the sector.</p>
+<h3 id="commitment-of-replication"><a class="header" href="#commitment-of-replication">Commitment of Replication</a></h3>
+<p>The terms <code>commR</code>, <code>sealed_cid</code>, <code>commitment of replication</code> are interchangeable.
+During sealing, the sector data (identified by the CommD) is encoded through a sequence of graph and hashing processes to create a unique replica.
+The root hash of the merkle tree of the resulting replica is the CommRLast.</p>
+<p>The CommRLast is then hashed together with the CommC (another merkle root output from Proof of Replication).
+This generates the CommR (Commitment of Replication, aka SealedSectorCID), which is recorded to the public blockchain.
+The CommRLast is saved privately by the miner for future use in Proof of Spacetime, but is not saved to the chain.</p>
+<h3 id="crowdloan"><a class="header" href="#crowdloan">Crowdloan</a></h3>
+<p>Projects can raise DOT tokens from the community
+through <a href="https://wiki.polkadot.network/docs/learn-crowdloans">crowdloans</a>. Participants pledge their DOT tokens to help
+the project win a parachain slot auction. If successful, the tokens are locked up for the duration of the parachain
+lease, and participants might receive rewards or tokens from the project in return.</p>
+<h3 id="deadline"><a class="header" href="#deadline">Deadline</a></h3>
+<p>A deadline is one of the multiple points during a proving period when proofs for some partitions are due.</p>
+<p>For more information on deadlines, you can read the original Filecoin specification:
+<a href="https://spec.filecoin.io/#section-algorithms.pos.post.design">https://spec.filecoin.io/#section-algorithms.pos.post.design</a></p>
+<h3 id="extrinsics-2"><a class="header" href="#extrinsics-2">Extrinsics</a></h3>
+<p>From the <a href="https://wiki.polkadot.network/docs/learn-transactions#pallets-and-extrinsics">Polkadot Wiki</a>:</p>
+<blockquote>
+<p>Within each functional pallet on the blockchain, one can call its functions and execute them successfully, provided they have the permission to do so. Because these calls originate <strong>outside of the blockchain runtime</strong>, such transactions are referred to as <strong>extrinsics</strong>.</p>
+</blockquote>
+<h3 id="fault"><a class="header" href="#fault">Fault</a></h3>
+<p>A fault happens when a proof is not submitted within the <a href="glossary.html#proving-period">proving period</a>.
+For a sector to stop being considered in proving periods, it needs to be declared as faulty
+— indicating the storage provider is aware of the faulty sector and will be working to restore it.
+If a sector is faulty for too long, it will be terminated and the deal will be slashed.</p>
+<p>For more information on faults, you can read the original Filecoin specification:
+<a href="https://spec.filecoin.io/#section-glossary.fault">https://spec.filecoin.io/#section-glossary.fault</a></p>
+<h3 id="full-node"><a class="header" href="#full-node">Full Node</a></h3>
+<p>A device (computer) that fully downloads and stores the entire blockchain of the parachain, validating and relaying
+transactions and blocks within the network. It is one of the <a href="glossary.html#node">node</a> types.</p>
+<h3 id="invulnerable"><a class="header" href="#invulnerable">Invulnerable</a></h3>
+<p>A status assigned to certain <a href="glossary.html#collator">collators</a> that makes them exempt from being removed from the active set of
+<a href="glossary.html#collator">collators</a>.</p>
+<h3 id="node"><a class="header" href="#node">Node</a></h3>
+<p>A device (computer) that participates in running the protocol software of a decentralized network; in other words, a
+participant of the blockchain network who runs it locally.</p>
+<h3 id="parachain"><a class="header" href="#parachain">Parachain</a></h3>
+<p>A parachain is a specialized blockchain that runs in parallel to other parachains within a larger network, benefiting
+from shared security and interoperability, and can be validated by the validators of the <a href="glossary.html#relay-chain">Relay Chain</a>.</p>
+<h3 id="partition"><a class="header" href="#partition">Partition</a></h3>
+<p>Partitions are logical groups<sup class="footnote-reference"><a href="#logical">1</a></sup> of sectors to be proven together.</p>
+<p>The number of sectors to be proven at once is 2349<sup class="footnote-reference"><a href="#computational_limit">2</a></sup>, as defined by Filecoin.</p>
+<p>For more information on partitions, you can read the original Filecoin specification:
+<a href="https://spec.filecoin.io/#section-algorithms.pos.post.constants--terminology">https://spec.filecoin.io/#section-algorithms.pos.post.constants--terminology</a></p>
+<div class="footnote-definition" id="logical"><sup class="footnote-definition-label">1</sup>
+<p>They do not reflect the physical storage state, only existing in the context of deadlines and proofs.</p>
+</div>
+<div class="footnote-definition" id="computational_limit"><sup class="footnote-definition-label">2</sup>
+<p>Filecoin defined the limit at 2349 to cope with computational limits, <a href="https://spec.filecoin.io/#section-algorithms.pos.post.windowpost">as described in the specification</a>.</p>
+</div>
+<h3 id="planck"><a class="header" href="#planck">Planck</a></h3>
+<p>From the <a href="https://wiki.polkadot.network/docs/learn-DOT#the-planck-unit">Polkadot Wiki</a>:</p>
+<blockquote>
+<p>The smallest unit for the account balance on Substrate based blockchains (Polkadot, Kusama, etc.) is Planck (a reference to Planck Length, the smallest possible distance in the physical Universe).
+You can compare DOT's Planck to BTC's Satoshi or ETH's Wei. Polkadot's native token DOT equals to \(10^{10}\) Planck and Kusama's native token KSM equals to \(10^{12}\) Planck.</p>
+</blockquote>
+<h3 id="polkadot"><a class="header" href="#polkadot">Polkadot</a></h3>
+<p>“Layer-0” blockchain platform designed to facilitate interoperability, scalability and security among different
+“Layer-1” blockchains, called <a href="glossary.html#parachain">parachains</a>.</p>
+<h2 id="proofs"><a class="header" href="#proofs">Proofs</a></h2>
+<p>Cryptographic evidence used to verify that storage providers have received, are storing, and are continuously
+maintaining data as promised.</p>
+<p>There are two main types of proofs:</p>
+<ul>
+<li>
+<p><a id="porep"></a> <strong>Proof-of-Replication (PoRep):</strong> In order to register a sector with the network, the
+sector has to be sealed. Sealing is a computation-heavy process that produces a unique representation of the data in
+the form of a proof, called Proof-of-Replication or PoRep.</p>
+</li>
+<li>
+<p><a id="post"></a> <strong>Proof-of-Spacetime (PoSt):</strong> Used to verify that the storage provider continues to store the
+data over time. <a href="glossary.html#storage-provider">Storage providers</a> must periodically generate and submit proofs to show that they
+are still maintaining the stored data as promised.</p>
+</li>
+</ul>
+<h3 id="proving-period"><a class="header" href="#proving-period">Proving Period</a></h3>
+<p>A proving period is when storage providers' commitments are audited,
+and they must prove they are still storing the data from the deals they signed</p>
+<ul>
+<li>the average period for proving all sectors maintained by a provider (default set to 24 hours).</li>
+</ul>
+<p>For more information on proving periods, you can read the original Filecoin specification:</p>
+<ul>
+<li>Proving periods in the context of Window Proof of Spacetime — <a href="https://spec.filecoin.io/#section-algorithms.pos.post.windowpost">https://spec.filecoin.io/#section-algorithms.pos.post.windowpost</a></li>
+<li>Proving periods in the context of Filecoin's system design — <a href="https://spec.filecoin.io/#section-algorithms.pos.post.design">https://spec.filecoin.io/#section-algorithms.pos.post.design</a></li>
+</ul>
+<h3 id="relay-chain"><a class="header" href="#relay-chain">Relay Chain</a></h3>
+<p>The Relay Chain in <a href="glossary.html#polkadot">Polkadot</a> is the central chain (blockchain) responsible for the network's shared
+security, consensus, and cross-chain interoperability.</p>
+<h3 id="sector"><a class="header" href="#sector">Sector</a></h3>
+<p>The sector is the default unit of storage that providers put in the network.
+A sector is a contiguous array of bytes on which a storage provider puts together, seals,and performs Proofs of Spacetime on.
+Storage providers store data on the network in fixed-size sectors.</p>
+<p>For more information on sectors, you can read the original Filecoin specification:
+<a href="https://spec.filecoin.io/#section-glossary.sector">https://spec.filecoin.io/#section-glossary.sector</a></p>
+<h3 id="session"><a class="header" href="#session">Session</a></h3>
+<p>A predefined period during which a set of <a href="glossary.html#collator">collators</a> remains constant.</p>
+<h3 id="slashing"><a class="header" href="#slashing">Slashing</a></h3>
+<p>The process of penalizing network participants, including <a href="glossary.html#validators">validators</a>, <a href="glossary.html#nominators">nominators</a>,
+and <a href="glossary.html#collator">collators</a>, for various protocol violations. These violations could include producing invalid blocks,
+equivocation (double signing), inability of the <a href="glossary.html#storage-provider">Storage Provider</a> to <a href="glossary.html#proofs">prove</a> that the data
+is stored and maintained as promised, or other malicious activities. As a result of slashing, participants may face a
+reduction in their <a href="glossary.html#staking">staked</a> funds or other penalties depending on the severity of the violation.</p>
+<h3 id="slot-auction"><a class="header" href="#slot-auction">Slot Auction</a></h3>
+<p>To secure a <a href="glossary.html#parachain">parachain</a> slot, a project must win an auction by <a href="glossary.html#term-to-avoid-pledge">pledging</a> (locking
+up) a significant amount of DOT tokens. These tokens are used as <a href="glossary.html#collateral">collateral</a> to secure the slot for a
+specified period. Once the slot is secured, the project can launch and operate its <a href="glossary.html#parachain">parachain</a>.</p>
+<h3 id="staking"><a class="header" href="#staking">Staking</a></h3>
+<p>Staking is when DOT holders lock up their tokens to support the network's security and operations. In
+return, they can earn rewards. There are two main roles involved in staking:</p>
+<ul>
+<li>
+<p><a name="validators"></a><strong>Validators</strong>:
+Validators produce new blocks, validate transactions, and secure the network.
+They are selected based on their stake and performance.
+Validators must run a <a href="glossary.html#node">node</a> and have the technical capability to maintain it.</p>
+</li>
+<li>
+<p><a name="nominators"></a><strong>Nominators</strong>: Nominators support the network by backing (nominating) validators they trust
+with their DOT tokens. Nominators share in the rewards earned by the validators they support. This allows DOT holders
+who don't want to run a validator node to still participate in the network's security and earn rewards.</p>
+</li>
+</ul>
+<p>Our parachain will use staking to back up the <a href="glossary.html#collator">collators</a> similarly to "Nominators".
+In this regard, "Nominators" will fall to <a href="glossary.html#storage-provider">Storage Providers</a>,
+while " Validators" will be assigned to <a href="glossary.html#collator">Collators</a> accordingly.</p>
+<h3 id="storage-provider"><a class="header" href="#storage-provider">Storage Provider</a></h3>
+<p>The user who offers storage space on their devices to store data for others.</p>
+<h3 id="storage-user"><a class="header" href="#storage-user">Storage User</a></h3>
+<p><strong><em>Aka Client:</em></strong> The user who initiates storage deals by providing data to be stored on the network by the <a href="glossary.html#storage-provider">Storage
+Provider</a>.</p>
+<h3 id="system-parachain"><a class="header" href="#system-parachain">System Parachain</a></h3>
+<p><a href="https://wiki.polkadot.network/docs/learn-system-chains">System-level chains</a> move functionality from
+the <a href="glossary.html#relay-chain">Relay Chain</a> into <a href="glossary.html#parachain">parachains</a>, minimizing the administrative use of
+the <a href="glossary.html#relay-chain">Relay Chain</a>. For example, a governance <a href="glossary.html#parachain">parachain</a> could move all
+the <a href="glossary.html#polkadot">Polkadot</a> governance processes from the <a href="glossary.html#relay-chain">Relay Chain</a> into a <a href="glossary.html#parachain">parachain</a>.</p>
+<h2 id="anti-glossary"><a class="header" href="#anti-glossary">Anti-Glossary</a></h2>
+<p>This section lists terms that should not be used within the project, along with preferred alternatives.</p>
+<h3 id="term-to-avoid-miner"><a class="header" href="#term-to-avoid-miner">Term to Avoid: Miner</a></h3>
+<p>In <a href="https://spec.filecoin.io/#section-glossary.filecoin">Filecoin</a>, a "Lotus Miner" is responsible for storage-related
+operations, such as sealing
+sectors (<a href="https://spec.filecoin.io/#section-algorithms.pos.porep">PoRep (Proof-of-Replication)</a>), proving storage
+(<a href="https://spec.filecoin.io/#section-algorithms.pos.post">PoSt (Proof-of-Spacetime)</a>), and participating in
+the <a href="https://spec.filecoin.io/#section-glossary.filecoin">Filecoin</a> network as a storage miner.</p>
+<p><strong>Reason</strong>: In the <a href="https://spec.filecoin.io/#section-glossary.filecoin">Filecoin</a> network,
+the miner simultaneously plays the roles of <a href="glossary.html#storage-provider">storage provider</a> and block producer.
+However, this term cannot be used in the <a href="glossary.html#polkadot">Polkadot</a> ecosystem because there are no block producers in <a href="glossary.html#parachain">parachains</a>;
+the <a href="glossary.html#relay-chain">Relay Chain</a> is responsible for block production. <a href="glossary.html#parachain">Parachains</a> can only prepare block
+candidates via the <a href="glossary.html#collator">Collator</a> node and pass them to the <a href="glossary.html#relay-chain">Relay Chain</a>.</p>
+<h3 id="term-to-avoid-pledge"><a class="header" href="#term-to-avoid-pledge">Term to Avoid: Pledge</a></h3>
+<p>It's better to apply this term within its proper context rather than avoiding it altogether. It's easy to confuse it
+with <a href="glossary.html#staking">staking</a>, but they have distinct meanings.</p>
+<p><strong>Reason</strong>: Pledging generally refers to locking up tokens as <a href="glossary.html#collateral">collateral</a> to participate in certain
+network activities or services like: <a href="glossary.html#slot-auction">Parachain Slot Auctions</a> and <a href="glossary.html#crowdloan">Crowdloans</a>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

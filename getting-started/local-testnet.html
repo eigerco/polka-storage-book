@@ -1,0 +1,488 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Local Testnet - Polka Storage Parachain - Polka Storage</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../getting-started/index.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../getting-started/local-testnet.html" class="active"><strong aria-hidden="true">2.1.</strong> Local Testnet - Polka Storage Parachain</a></li><li class="chapter-item expanded "><a href="../getting-started/car-server.html"><strong aria-hidden="true">2.2.</strong> CAR server</a></li><li class="chapter-item expanded "><a href="../getting-started/demo.html"><strong aria-hidden="true">2.3.</strong> Real-world use case demo</a></li></ol></li><li class="chapter-item expanded "><a href="../storage-provider-cli/index.html"><strong aria-hidden="true">3.</strong> Polka Storage Provider CLI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../storage-provider-cli/storage.html"><strong aria-hidden="true">3.1.</strong> storage</a></li><li class="chapter-item expanded "><a href="../storage-provider-cli/wallet.html"><strong aria-hidden="true">3.2.</strong> wallet</a></li></ol></li><li class="chapter-item expanded "><a href="../storagext-cli/index.html"><strong aria-hidden="true">4.</strong> Storagext CLI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../storagext-cli/market.html"><strong aria-hidden="true">4.1.</strong> market</a></li><li class="chapter-item expanded "><a href="../storagext-cli/storage-provider.html"><strong aria-hidden="true">4.2.</strong> storage-provider</a></li><li class="chapter-item expanded "><a href="../storagext-cli/system.html"><strong aria-hidden="true">4.3.</strong> system</a></li></ol></li><li class="chapter-item expanded "><a href="../pallets/index.html"><strong aria-hidden="true">5.</strong> Pallets</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../pallets/market.html"><strong aria-hidden="true">5.1.</strong> Market</a></li><li class="chapter-item expanded "><a href="../pallets/storage-provider.html"><strong aria-hidden="true">5.2.</strong> Storage Provider</a></li></ol></li><li class="chapter-item expanded "><a href="../glossary.html"><strong aria-hidden="true">6.</strong> Glossary</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Polka Storage</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="local-testnet---polka-storage-parachain"><a class="header" href="#local-testnet---polka-storage-parachain">Local Testnet - Polka Storage Parachain</a></h1>
+<p>This guide will help you set up a local parachain network using zombienet.
+At the end, we will have three nodes: Alice, Bob and Charlie.
+Alice and Bob will be running Polkadot relay chain nodes as validators,
+and Charlie will run a relay chain and parachain node.
+Charlie will be our contact point to the parachain network.</p>
+<h2 id="native-binaries"><a class="header" href="#native-binaries">Native Binaries</a></h2>
+<p>You can download our latest releases's binaries directly and run them on your machine without additional dependencies.
+We support <code>Linux x86_64</code> and <code>MacOS ARM x64</code>. The commands below will download:</p>
+<ul>
+<li><a href="https://github.com/paritytech/polkadot-sdk/releases">Relay Chain</a> binaries (<code>polkadot</code>, <code>polkadot-prepare-worker</code>, <code>polkadot-execute-worker</code>),</li>
+<li>Polka Storage Parachain binary (<code>polka-storage-node</code>),</li>
+<li><a href="../storage-provider-cli/index.html">Polka Storage Provider</a> internal node (<code>polka-storage-provider</code>),</li>
+<li><a href="../storagext-cli/">CLI for interacting with the parachain</a> (<code>storagext-cli</code>),</li>
+<li><a href="https://paritytech.github.io/zombienet/install.html">zombienet</a> to spawn local testnets and orchestrate them (<code>zombienet</code>),</li>
+<li>Polka Storage Parachain out-of-the-box zombienet's configuration (<code>polka-storage-testnet.toml</code>).</li>
+</ul>
+<h3 id="linux-x86_64"><a class="header" href="#linux-x86_64">Linux x86_64</a></h3>
+<ol>
+<li>Download the binaries:</li>
+</ol>
+<pre><code class="language-bash">wget https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-v1.13.0/polkadot
+wget https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-v1.13.0/polkadot-prepare-worker
+wget https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-v1.13.0/polkadot-execute-worker
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/linux_x86-64/polka-storage-node
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/linux_x86-64/polka-storage-provider
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/linux_x86-64/storagext-cli
+wget https://github.com/paritytech/zombienet/releases/download/v1.3.106/zombienet-linux-x64 -O zombienet
+</code></pre>
+<ol start="2">
+<li>Setup permissions:</li>
+</ol>
+<pre><code class="language-bash">chmod +x zombienet polka-storage-node polka-storage-provider storagext-cli polkadot polkadot-prepare-worker polkadot-execute-worker
+</code></pre>
+<ol start="3">
+<li>Run <code>zombienet</code>:</li>
+</ol>
+<pre><code class="language-bash">export PATH=$(pwd):$PATH
+
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/polka-storage-testnet.toml
+zombienet -p native spawn polka-storage-testnet.toml
+</code></pre>
+<h3 id="macos-arm"><a class="header" href="#macos-arm">MacOS ARM</a></h3>
+<ol>
+<li>Download the binaries:</li>
+</ol>
+<pre><code class="language-bash">wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polkadot
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polkadot-prepare-worker
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polkadot-execute-worker
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polka-storage-node
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polka-storage-provider
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/storagext-cli
+wget https://github.com/paritytech/zombienet/releases/download/v1.3.106/zombienet-macos-arm64 -O zombienet
+</code></pre>
+<ol start="2">
+<li>Setup permissions &amp; de-quarantine:</li>
+</ol>
+<pre><code class="language-bash">chmod +x zombienet polka-storage-node polka-storage-provider storagext-cli polkadot polkadot-prepare-worker polkadot-execute-worker
+xattr -d com.apple.quarantine zombienet polka-storage-node polka-storage-provider storagext-cli polkadot polkadot-prepare-worker polkadot-execute-worker
+</code></pre>
+<div class="warning">
+If, when running the <code>xattr</code> command, it outputs <code>No such attr: com.apple.quarantine</code>, there's nothing to worry about. It means the downloaded binaries were not quarantined.
+</div>
+<ol start="3">
+<li>Run <code>zombienet</code>:</li>
+</ol>
+<pre><code class="language-bash">export PATH=$(pwd):$PATH
+
+wget https://s3.eu-central-1.amazonaws.com/polka-storage/polka-storage-testnet.toml
+zombienet -p native spawn polka-storage-testnet.toml
+</code></pre>
+<p>You can easily access the parachain using the Polkadot.js Apps interface by clicking on this link:
+<a href="https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:42069#/explorer">https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:42069#/explorer</a></p>
+<p>Where you should be greeted by a page like this:</p>
+<p>
+  <a href="https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:42069#/explorer">
+    <img src="../images/polkadot_substrate_portal.png" alt="Polkadot/Subtrate Portal">
+  </a>
+</p>
+<p>Or you can interact with the chain via <a href="../storagext-cli/index.html"><code>storagext-cli</code></a>, for example:</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider register Alice
+</code></pre>
+<h2 id="kubernetes"><a class="header" href="#kubernetes">Kubernetes</a></h2>
+<div class="warning">
+Docker Images were only published on x86_64 platforms! They won't work on Kubernetes on MacOS.
+</div>
+<h3 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h3>
+<ul>
+<li><a href="https://github.com/paritytech/zombienet/releases/tag/v1.3.106">zombienet v1.3.106</a> - cli tool to easily spawn ephemeral Polkadot/Substrate networks and perform tests against them.</li>
+<li><a href="https://minikube.sigs.k8s.io/docs/start/">minikube</a> — to run the parachain nodes</li>
+<li>a configured <a href="https://kubernetes.io/docs/tasks/tools/#kubectl">kubectl</a> — is used to set up the required kubernetes resources by <code>zombienet</code>
+<ul>
+<li><a href="https://minikube.sigs.k8s.io/docs/handbook/kubectl/">https://minikube.sigs.k8s.io/docs/handbook/kubectl/</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/tools/#kubectl">https://kubernetes.io/docs/tasks/tools/#kubectl</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="start-up-the-kubernetes-cluster"><a class="header" href="#start-up-the-kubernetes-cluster">Start up the Kubernetes cluster</a></h3>
+<p>Using <code>minikube</code>, you can start the cluster with the following command:</p>
+<pre><code>minikube start
+</code></pre>
+<p>You can read more about <code>minikube</code> on its <a href="https://minikube.sigs.k8s.io/docs/handbook/controls/">Getting Started</a> page.</p>
+<h3 id="running-the-parachain"><a class="header" href="#running-the-parachain">Running the Parachain</a></h3>
+<ol>
+<li>Create a <code>local-kube-testnet.toml</code> file on your machine with the following content.</li>
+</ol>
+<pre><code class="language-toml">[settings]
+image_pull_policy = "IfNotPresent"
+
+[relaychain]
+chain = "rococo-local"
+default_args = ["--detailed-log-output", "-lparachain=debug,xcm=trace,runtime=trace"]
+default_image = "docker.io/parity/polkadot:v1.13.0"
+
+[[relaychain.nodes]]
+name = "alice"
+validator = true
+
+[[relaychain.nodes]]
+name = "bob"
+validator = true
+
+[[parachains]]
+cumulus_based = true
+
+# We need to use a Parachain of an existing System Chain (https://github.com/paritytech/polkadot-sdk/blob/master/polkadot/runtime/rococo/src/xcm_config.rs).
+# The reason: being able to get native DOTs from Relay Chain to Parachain via XCM Teleport.
+# We'll have a proper Parachain ID in the *future*, but for now, let's stick to 1000 (which is AssetHub and trusted).
+id = 1000
+
+# Run Charlie as parachain collator
+[[parachains.collators]]
+args = ["--detailed-log-output", "-lparachain=debug,xcm=trace,runtime=trace"]
+command = "polka-storage-node"
+image = "polkadotstorage.azurecr.io/parachain-node:0.1.0"
+name = "charlie"
+rpc_port = 42069
+validator = true
+</code></pre>
+<ol start="2">
+<li>Run the Parachain, and spawn the zombienet testnet in the Kubernetes cluster:</li>
+</ol>
+<pre><code>zombienet -p kubernetes spawn local-kube-testnet.toml
+</code></pre>
+<details>
+<summary>Click here to show the example output.</summary>
+<pre><code>│ /ip4/10.1.0.16/tcp/30333/ws/p2p/12D3KooWPKzmmE2uYgF3z13xjpbFTp63g9dZFag8pG6MgnpSLF4S                                   │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+         Warn: Tracing collator service doesn't exist
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                                       Network launched 🚀🚀                                                       │
+├──────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Namespace                    │ zombie-1cecb9b5e0f9a14208f2fbefd9384490                                                            │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Provider                     │ kubernetes                                                                                         │
+├──────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                         Node Information                                                          │
+├──────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Name                         │ alice                                                                                              │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Direct Link                  │ https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A34341#/explorer                           │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Prometheus Link              │ http://127.0.0.1:35537/metrics                                                                     │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Log Cmd                      │ kubectl logs -f alice -c alice -n zombie-1cecb9b5e0f9a14208f2fbefd9384490                          │
+├──────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                         Node Information                                                          │
+├──────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Name                         │ bob                                                                                                │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Direct Link                  │ https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A44459#/explorer                           │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Prometheus Link              │ http://127.0.0.1:43841/metrics                                                                     │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Log Cmd                      │ kubectl logs -f bob -c bob -n zombie-1cecb9b5e0f9a14208f2fbefd9384490                              │
+├──────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                         Node Information                                                          │
+├──────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Name                         │ charlie                                                                                            │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Direct Link                  │ https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A42069#/explorer                           │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Prometheus Link              │ http://127.0.0.1:42675/metrics                                                                     │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Log Cmd                      │ kubectl logs -f charlie -c charlie -n zombie-1cecb9b5e0f9a14208f2fbefd9384490                      │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Parachain ID                 │ 1000                                                                                               │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ ChainSpec Path               │ /tmp/zombie-1cecb9b5e0f9a14208f2fbefd9384490_-29755-WOCdKtq9zPGA/1000-rococo-local.json            │
+└──────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+</details>
+<h3 id="verifying-the-setup"><a class="header" href="#verifying-the-setup">Verifying the Setup</a></h3>
+<p>Check if all zombienet pods were started successfully:</p>
+<p><code>kubectl get pods --all-namespaces</code></p>
+<details>
+<summary>Click here to show the example output.</summary>
+<pre><code>...
+zombie-01b7920d650c18d3d78f75fd8b0978af   alice                              1/1     Running     0               77s
+zombie-01b7920d650c18d3d78f75fd8b0978af   bob                                1/1     Running     0               62s
+zombie-01b7920d650c18d3d78f75fd8b0978af   charlie                            1/1     Running     0               49s
+zombie-01b7920d650c18d3d78f75fd8b0978af   fileserver                         1/1     Running     0               2m28s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp                               0/1     Completed   0               2m25s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp-1                             0/1     Completed   0               2m25s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp-2                             0/1     Completed   0               2m15s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp-3                             0/1     Completed   0               2m1s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp-4                             0/1     Completed   0               114s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp-5                             0/1     Completed   0               91s
+zombie-01b7920d650c18d3d78f75fd8b0978af   temp-collator                      0/1     Completed   0               104s
+</code></pre>
+</details>
+<h3 id="accessing-the-parachain"><a class="header" href="#accessing-the-parachain">Accessing the Parachain</a></h3>
+<p>You can easily access the parachain using the Polkadot.js Apps interface by clicking on this link:</p>
+<p><a href="https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A42069#/explorer">https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A42069#/explorer</a></p>
+<p>This link will automatically connect to Charlie's node running on your local machine at port <code>42069</code>. The port is configured in <code>local-kube-testnet.toml</code> under <code>rpc_port</code> for Charlie's node.</p>
+<h2 id="zombienet-configuration-breakdown"><a class="header" href="#zombienet-configuration-breakdown">Zombienet Configuration Breakdown</a></h2>
+<p>During the setup, you either download a file in the third step of <a href="#linux-x86_64">Linux</a>/<a href="#macos-arm">MacOS</a> — <code>polka-storage-testnet.toml</code> —
+or copy it from the first step of <a href="#running-the-parachain">Running the parachain</a>.</p>
+<h3 id="similarities"><a class="header" href="#similarities">Similarities</a></h3>
+<p>The two files share most of the contents, so we'll start by covering their similarities.
+For more details, you should refer to the <a href="https://paritytech.github.io/zombienet/network-definition-spec.html"><code>zombienet</code> documentation</a>:</p>
+<h4 id="relaychain"><a class="header" href="#relaychain"><code>relaychain</code></a></h4>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>chain</code></td><td>The relaychain name</td></tr>
+<tr><td><code>default_args</code></td><td>The default arguments passed to the <code>command</code></td></tr>
+<tr><td><code>default_command</code></td><td>The default command to run the relaychain</td></tr>
+<tr><td><code>nodes</code></td><td>List of tables defining the nodes to run</td></tr>
+</tbody></table>
+</div>
+<h5 id="nodes"><a class="header" href="#nodes"><code>nodes</code></a></h5>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>name</code></td><td>The node name</td></tr>
+<tr><td><code>validator</code></td><td>Whether the node is a validator or not</td></tr>
+</tbody></table>
+</div>
+<h4 id="parachains"><a class="header" href="#parachains"><code>parachains</code></a></h4>
+<p>A list of tables defining multiple parachains, in our case, we only care for our own parachain.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>cumulus_based</code></td><td>Whether to use <code>cumulus</code> based generation</td></tr>
+<tr><td><code>id</code></td><td>The parachain ID, we're using <code>1000</code> as a placeholder for now</td></tr>
+<tr><td><code>collators</code></td><td>List of tables defining the collators</td></tr>
+</tbody></table>
+</div>
+<h5 id="collators"><a class="header" href="#collators"><code>collators</code></a></h5>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>args</code></td><td>The arguments passed to the <code>command</code></td></tr>
+<tr><td><code>command</code></td><td>The command to run the collator</td></tr>
+<tr><td><code>name</code></td><td>The collator name</td></tr>
+<tr><td><code>validator</code></td><td>Whether the collator is also a validator</td></tr>
+</tbody></table>
+</div>
+<h3 id="differences"><a class="header" href="#differences">Differences</a></h3>
+<p>The difference between them lies in the usage of container configurations:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>image_pull_policy</code></td><td>Defines when <code>zombienet</code> should pull an image; read more about it in the <a href="https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy">Kubernetes documentation</a></td></tr>
+<tr><td><code>image</code></td><td>Defines which image to pull</td></tr>
+<tr><td><code>ws_port</code>/<code>rpc_port</code></td><td>Depending on the type of configuration (Native or Kubernetes), this variable sets the port for the collator RPC service</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../getting-started/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../getting-started/car-server.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../getting-started/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../getting-started/car-server.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

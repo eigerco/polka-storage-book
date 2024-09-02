@@ -1,0 +1,566 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Storage Provider - Polka Storage</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../getting-started/index.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../getting-started/local-testnet.html"><strong aria-hidden="true">2.1.</strong> Local Testnet - Polka Storage Parachain</a></li><li class="chapter-item expanded "><a href="../getting-started/car-server.html"><strong aria-hidden="true">2.2.</strong> CAR server</a></li><li class="chapter-item expanded "><a href="../getting-started/demo.html"><strong aria-hidden="true">2.3.</strong> Real-world use case demo</a></li></ol></li><li class="chapter-item expanded "><a href="../storage-provider-cli/index.html"><strong aria-hidden="true">3.</strong> Polka Storage Provider CLI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../storage-provider-cli/storage.html"><strong aria-hidden="true">3.1.</strong> storage</a></li><li class="chapter-item expanded "><a href="../storage-provider-cli/wallet.html"><strong aria-hidden="true">3.2.</strong> wallet</a></li></ol></li><li class="chapter-item expanded "><a href="../storagext-cli/index.html"><strong aria-hidden="true">4.</strong> Storagext CLI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../storagext-cli/market.html"><strong aria-hidden="true">4.1.</strong> market</a></li><li class="chapter-item expanded "><a href="../storagext-cli/storage-provider.html"><strong aria-hidden="true">4.2.</strong> storage-provider</a></li><li class="chapter-item expanded "><a href="../storagext-cli/system.html"><strong aria-hidden="true">4.3.</strong> system</a></li></ol></li><li class="chapter-item expanded "><a href="../pallets/index.html"><strong aria-hidden="true">5.</strong> Pallets</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../pallets/market.html"><strong aria-hidden="true">5.1.</strong> Market</a></li><li class="chapter-item expanded "><a href="../pallets/storage-provider.html" class="active"><strong aria-hidden="true">5.2.</strong> Storage Provider</a></li></ol></li><li class="chapter-item expanded "><a href="../glossary.html"><strong aria-hidden="true">6.</strong> Glossary</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Polka Storage</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="storage-provider-pallet"><a class="header" href="#storage-provider-pallet">Storage Provider Pallet</a></h1>
+<h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of Contents</a></h2>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#usage">Usage</a>
+<ul>
+<li><a href="#declaring-storage-faults-and-recoveries">Declaring storage faults and recoveries</a></li>
+</ul>
+</li>
+<li><a href="#extrinsics">Extrinsics</a>
+<ul>
+<li><a href="#register_storage_provider"><code>register_storage_provider</code></a></li>
+<li><a href="#pre_commit_sector"><code>pre_commit_sector</code></a></li>
+<li><a href="#prove_commit_sector"><code>prove_commit_sector</code></a></li>
+<li><a href="#submit_windowed_post"><code>submit_windowed_post</code></a></li>
+<li><a href="#declare_faults"><code>declare_faults</code></a></li>
+<li><a href="#declare_faults_recovered"><code>declare_faults_recovered</code></a></li>
+</ul>
+</li>
+<li><a href="#events">Events</a></li>
+<li><a href="#errors">Errors</a></li>
+<li><a href="#pallet-constants">Pallet constants</a></li>
+</ul>
+<h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
+<p>The <code>Storage Provider Pallet</code> handles the creation of storage providers and facilitates storage providers and clients in creating storage deals.
+Storage providers must provide the <a href="../glossary.html#post">Proof of Space-time (PoSt)</a> and the <a href="../glossary.html#porep">Proof of Replication (PoRep)</a>
+to the <code>Storage Provider Pallet</code> to prevent the pallet from imposing penalties on storage providers through <a href="#storage-fault-slashing">slashing</a>.</p>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<h3 id="declaring-storage-faults-and-recoveries"><a class="header" href="#declaring-storage-faults-and-recoveries">Declaring storage faults and recoveries</a></h3>
+<p>Faulty sectors are subject to penalties. To minimize said penalties, the storage provider should declare any sector for which they cannot
+generate a <a href="../glossary.html#post">PoSt</a> as faulty, this will mask said sectors in future deadlines, minimizing the suffered penalties.
+A storage provider must declare the sector as faulty <a href="#fault-declaration-cutoff"><strong>before</strong></a> the challenge window.</p>
+<p>Through the <a href="#declare_faults"><code>declare_faults</code></a> and <a href="#declare_faults_recovered"><code>declare_faults_recovered</code></a> extrinsics
+the storage provider can declare sectors as faulty or recovered<sup class="footnote-reference"><a href="#recovered">1</a></sup>.</p>
+<img src="../images/storage-provider/faults.svg" alt="Declaring faults and recoveries">
+<div class="footnote-definition" id="recovered"><sup class="footnote-definition-label">1</sup>
+<p>Recovered sectors still require being proven before they can become fully active again.</p>
+</div>
+<p>Substrate pallet hooks execute actions when certain conditions are met.</p>
+<p>Substrate pallet hooks execute some actions when certain conditions are met.
+We use these hooks — when a block finalizes — to check if storage providers are up to date with their proofs.
+If a storage provider fails to submit proof on time, the Storage Provider pallet will signal the Market pallet to penalize the storage provider.
+Accordingly, removing and burning the collateral locked up during the pre-commit.</p>
+<h2 id="extrinsics"><a class="header" href="#extrinsics">Extrinsics</a></h2>
+<h3 id="register_storage_provider"><a class="header" href="#register_storage_provider"><code>register_storage_provider</code></a></h3>
+<p>Storage Provider registration is the first extrinsic any storage provider must call. Without being registered, other extrinsics will return an error.</p>
+<p>Before a storage provider can register, they must set up a <a href="https://docs.libp2p.io/concepts/fundamentals/peers/#peer-id">PeerId</a>. This <a href="https://docs.libp2p.io/concepts/fundamentals/peers/#peer-id">PeerId</a> is used in the p2p network to connect to the storage provider.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>peer_id</code></td><td><a href="https://libp2p.io/">libp2p</a> <a href="https://docs.libp2p.io/concepts/fundamentals/peers/">ID</a></td><td>Hex string of the PeerId bytes</td></tr>
+<tr><td><code>window_post_proof_type</code></td><td>Proof type the storage provider uses</td><td>String, currently only <code>StackedDRGWindow2KiBV1P1</code> is available</td></tr>
+</tbody></table>
+</div>
+<h4 id="example"><a class="header" href="#example"><a class="header" id="register_storage_provider.example" href="#register_storage_provider.example">Example</a></a></h4>
+<p>Registering a storage provider with keypair <code>//Alice</code> and peer ID <code>alice</code> with the following command<sup class="footnote-reference"><a href="#register_storage_provider">2</a></sup>:</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider register alice
+</code></pre>
+<div class="footnote-definition" id="register_storage_provider"><sup class="footnote-definition-label">2</sup>
+<p>Read more about the <code>register</code> command in <a href="../storagext-cli/storage-provider.html#register"><em>Storagext CLI/Subcommand <code>storage-provider</code>/<code>register</code></em></a></p>
+</div>
+<h3 id="pre_commit_sector"><a class="header" href="#pre_commit_sector"><code>pre_commit_sector</code></a></h3>
+<p>After publishing a deal, the storage provider needs to pre-commit the sector information to the chain.
+Sectors are not valid after pre-commit. The sectors need to be proven first.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>seal_proof</code></td><td>Seal proof type this storage provider is using <sup class="footnote-reference"><a href="#note">3</a></sup></td><td>String, currently only <code>StackedDRGWindow2KiBV1P1</code> is available</td></tr>
+<tr><td><code>sector_number</code></td><td>The sector number that is being pre-committed</td><td>Positive integer</td></tr>
+<tr><td><code>sealed_cid</code></td><td><a href="../glossary.html#commitment-of-replication">Commitment of replication</a></td><td>Hex string of the sealed CID bytes</td></tr>
+<tr><td><code>deal_ids</code></td><td>Deal IDs to be pre-committed, from <code>publish_storage_deals</code></td><td>Array of integers</td></tr>
+<tr><td><code>expiration</code></td><td>Expiration block of the pre-committed sector</td><td>Positive integer</td></tr>
+<tr><td><code>unsealed_cid</code></td><td>Commitment of data <a href="../glossary.html#commitment-of-data">sector sealing</a></td><td>Hex string of the unsealed CID bytes</td></tr>
+</tbody></table>
+</div><div class="warning">
+Sectors are not valid after pre-commit. The sectors need to be proven first.
+</div>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">3</sup>
+<p>Only one seal-proof type supported at the moment, <code>2KiB</code>.</p>
+</div>
+<h4 id="example-1"><a class="header" href="#example-1"><a class="header" id="pre_commit_sector.example" href="#pre_commit_sector.example">Example</a></a></h4>
+<p>Storage provider <code>//Alice</code> pre-committing<sup class="footnote-reference"><a href="#pre_commit_sector">4</a></sup> a sector number 1, with a single deal ID 0.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider pre-commit @pre-commit-sector.json
+</code></pre>
+<p>Where <code>pre-commit-sector.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">{
+  "sector_number": 1,
+  "sealed_cid": "bafk2bzaceajreoxfdcpdvitpvxm7vkpvcimlob5ejebqgqidjkz4qoug4q6zu",
+  "deal_ids": [0],
+  "expiration": 100,
+  "unsealed_cid": "bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+  "seal_proof": "StackedDRG2KiBV1P1"
+}
+</code></pre>
+<div class="footnote-definition" id="pre_commit_sector"><sup class="footnote-definition-label">4</sup>
+<p>Read more about the <code>pre-commit</code> command in <a href="../storagext-cli/storage-provider.html#pre-commit"><em>Storagext CLI/Subcommand <code>storage-provider</code>/<code>pre-commit</code></em></a></p>
+</div>
+<h3 id="prove_commit_sector"><a class="header" href="#prove_commit_sector"><code>prove_commit_sector</code></a></h3>
+<p>After pre-committing some new sectors the storage provider needs to supply a <a href="../glossary.html#commitment-of-replication">Proof-of-Replication</a> for these sectors <sup class="footnote-reference"><a href="#note">3</a></sup>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>sector_number</code></td><td>The sector number that is being prove-committed</td><td>Positive integer</td></tr>
+<tr><td><code>proof</code></td><td>The <a href="../glossary.html#commitment-of-replication">proof of replication</a></td><td>Hex string of the proof bytes</td></tr>
+</tbody></table>
+</div>
+<div class="footnote-definition" id="note"><sup class="footnote-definition-label">3</sup>
+<p>At the moment, any proof of non-zero length is accepted for PoRep.</p>
+</div>
+<h4 id="example-2"><a class="header" href="#example-2"><a class="header" id="prove_commit_sector.example" href="#prove_commit_sector.example">Example</a></a></h4>
+<p>This example follows up on the pre-commit example. Storage provider <code>//Alice</code> is proven committing<sup class="footnote-reference"><a href="#prove_commit_sector">5</a></sup> sector number 1.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider prove-commit @prove-commit-sector.json
+</code></pre>
+<p>Where <code>prove-commit-sector.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">{
+  "sector_number": 1,
+  "proof": "1230deadbeef"
+}
+</code></pre>
+<div class="footnote-definition" id="prove_commit_sector"><sup class="footnote-definition-label">5</sup>
+<p>Read more about the <code>prove-commit</code> command in <a href="../storagext-cli/storage-provider.html#prove-commit"><em>Storagext CLI/Subcommand <code>storage-provider</code>/<code>prove-commit</code></em></a></p>
+</div>
+<h3 id="submit_windowed_post"><a class="header" href="#submit_windowed_post"><code>submit_windowed_post</code></a></h3>
+<p>A storage provider needs to periodically submit a <a href="../glossary.html#proofs">Proof-of-Spacetime</a> to prove that they are still storing the data they promised. Multiple proofs can be submitted at once.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>deadline</code></td><td>The deadline index which the submission targets</td><td>Positive integer</td></tr>
+<tr><td><code>partitions</code></td><td>The partitions being proven</td><td>Array of positive integers</td></tr>
+<tr><td><code>post_proof</code></td><td>The proof type, should be consistent with the proof type for registration</td><td>String, currently only <code>StackedDRGWindow2KiBV1P1</code> is available</td></tr>
+<tr><td><code>proof_bytes</code></td><td>The proof submission, to be checked in the storage provider pallet.</td><td>Hex string of the proof bytes</td></tr>
+</tbody></table>
+</div>
+<h4 id="example-3"><a class="header" href="#example-3"><a class="header" id="submit_windowed_post.example" href="#submit_windowed_post.example">Example</a></a></h4>
+<p>Storage provider <code>//Alice</code> submitting<sup class="footnote-reference"><a href="#submit_windowed_post">6</a></sup> proof for deadline 0, partition 0.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider submit-windowed-post @submit-windowed-post.json
+</code></pre>
+<p>Where <code>submit-windowed-post.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">{
+  "deadline": 0,
+  "partition": [0],
+  "proof": {
+    "post_proof": "2KiB",
+    "proof_bytes": "1230deadbeef"
+  }
+}
+</code></pre>
+<div class="footnote-definition" id="submit_windowed_post"><sup class="footnote-definition-label">6</sup>
+<p>Read more about the <code>submit-windowed-post</code> command in <a href="../storagext-cli/storage-provider.html#submit-windowed-post"><em>Storagext CLI/Subcommand <code>storage-provider</code>/<code>submit-windowed-post</code></em></a></p>
+</div>
+<h3 id="declare_faults"><a class="header" href="#declare_faults"><code>declare_faults</code></a></h3>
+<p>A storage provider can declare faults when they know they cannot submit PoSt on time to prevent getting penalized.
+Faults have an expiry of 42 days.
+The sectors will be terminated if the faults have not been recovered before this time.
+Multiple faults can be declared at once.</p>
+<p><code>declare_faults</code> can take in multiple fault declarations:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>faults</code></td><td>The fault declarations</td><td>Array of the fault declarations, described below</td></tr>
+</tbody></table>
+</div>
+<p>Where the fault declarations contain:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>deadline</code></td><td>The deadline to which the faulty sectors are assigned</td><td>Positive integer</td></tr>
+<tr><td><code>partition</code></td><td>Partition index within the deadline containing the faulty sectors.</td><td>Positive integer</td></tr>
+<tr><td><code>sectors</code></td><td>Sectors in the partition being declared faulty</td><td>Set of positive integers</td></tr>
+</tbody></table>
+</div>
+<h4 id="example-4"><a class="header" href="#example-4"><a class="header" id="declare_faults.example" href="#declare_faults.example">Example</a></a></h4>
+<p>Storage provider <code>//Alice</code> declaring faults<sup class="footnote-reference"><a href="#declare_faults">7</a></sup> on deadline 0, partition 0, sector 1.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider declare-faults @fault-declaration.json
+</code></pre>
+<p>Where <code>fault-declaration.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">[
+  {
+    "deadline": 0,
+    "partition": 0,
+    "sectors": [1]
+  }
+]
+</code></pre>
+<div class="footnote-definition" id="declare_faults"><sup class="footnote-definition-label">7</sup>
+<p>Read more about the <code>declare-faults</code> command in <a href="../storagext-cli/storage-provider.html#declare-faults"><em>Storagext CLI/Subcommand <code>storage-provider</code>/<code>declare-faults</code></em></a></p>
+</div>
+<h3 id="declare_faults_recovered"><a class="header" href="#declare_faults_recovered"><code>declare_faults_recovered</code></a></h3>
+<p>After declaring sectors as faulty, a storage provider can recover them.
+The storage provider must recover the faults if the system has marked some sectors as faulty due to a missing PoSt.
+Faults are not fully recovered until the storage provider submits a valid PoSt after the <code>declare_faults_recovered</code> extrinsic.</p>
+<p><code>declare_faults_recovered</code> can take in multiple fault recoveries:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>recoveries</code></td><td>The fault recoveries</td><td>Array of the fault recovery declarations, described below</td></tr>
+</tbody></table>
+</div>
+<p>Where the fault recoveries contain:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>deadline</code></td><td>The deadline to which the recovered sectors are assigned</td><td>Positive integer</td></tr>
+<tr><td><code>partition</code></td><td>Partition index within the deadline containing the recovered sectors</td><td>Positive integer</td></tr>
+<tr><td><code>sectors</code></td><td>Sectors in the partition being declared recovered</td><td>Set of positive integers</td></tr>
+</tbody></table>
+</div>
+<h4 id="example-5"><a class="header" href="#example-5"><a class="header" id="declare_faults_recovered.example" href="#declare_faults_recovered.example">Example</a></a></h4>
+<p>Storage provider <code>//Alice</code> declaring recoveries<sup class="footnote-reference"><a href="#declare_faults_recovered">8</a></sup> on deadline 0, partition 0, sector 1.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" storage-provider declare-faults-recovered @fault-declaration.json
+</code></pre>
+<p>Where <code>fault-declaration.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">[
+  {
+    "deadline": 0,
+    "partition": 0,
+    "sectors": [1]
+  }
+]
+</code></pre>
+<div class="footnote-definition" id="declare_faults_recovered"><sup class="footnote-definition-label">8</sup>
+<p>Read more about the <code>declare-faults-recovered</code> command in <a href="../storagext-cli/storage-provider.html#declare-faults-recovered"><em>Storagext CLI/Subcommand <code>storage-provider</code>/<code>declare-faults-recovered</code></em></a></p>
+</div>
+<h2 id="events"><a class="header" href="#events">Events</a></h2>
+<p>The Storage Provider Pallet emits the following events:</p>
+<ul>
+<li><code>StorageProviderRegistered</code> - Indicates that a new storage provider has been registered.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>info</code> - The static information about the new storage provider. This information includes:
+<ul>
+<li><code>peer_id</code> - Libp2p identity that should be used when connecting to the storage provider.</li>
+<li><code>window_post_proof_type</code> - The proof type used by the storage provider for sealing sectors.</li>
+<li><code>sector_size</code> - Amount of space in each sector committed to the network by the storage provider.</li>
+<li><code>window_post_partition_sectors</code> - The number of sectors in each Window PoSt partition (proof).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>SectorPreCommitted</code> - A storage provider has pre-committed some new sector after publishing some new deal.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>sector</code> - The sector number being pre-committed.</li>
+</ul>
+</li>
+<li><code>SectorProven</code> - A storage provider has proven a sector that they previously pre-committed.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>sector_number</code> - The sector number that was proven.</li>
+</ul>
+</li>
+<li><code>SectorSlashed</code> - A previously pre-committed sector, but not proven, has been slashed by the system because it has expired.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>sector_number</code> - The sector number that has been slashed because of expiry.</li>
+</ul>
+</li>
+<li><code>ValidPoStSubmitted</code> - A valid PoSt has been submitted by a storage provider.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+</ul>
+</li>
+<li><code>FaultsDeclared</code> - A storage provider has declared some sectors as faulty.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>faults</code> - An array with information about the fault declarations. This information includes:
+<ul>
+<li><code>deadline</code> - The deadline to which the faulty sectors are assigned.</li>
+<li><code>partition</code> - Partition number within the deadline containing the faulty sectors.</li>
+<li><code>sectors</code> - Sectors in the partition being declared as faulty.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>FaultsRecovered</code> - A storage provider has recovered some sectors previously declared as faulty.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>recoveries</code> - An array with information about the fault recoveries. This information includes:
+<ul>
+<li><code>deadline</code> - The deadline to which the recovered sectors are assigned.</li>
+<li><code>partition</code> - Partition number within the deadline containing the recovered sectors.</li>
+<li><code>sectors</code> - Sectors in the partition being declared as recovered.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>PartitionFaulty</code> - It was detected that a storage provider has not submitted their PoSt on time and has marked some sectors as faulty.
+<ul>
+<li><code>owner</code> - SS58 address of the storage provider.</li>
+<li><code>partition</code> - Partition number for which the PoSt was missed.</li>
+<li><code>sectors</code> - The sectors in the partition declared faulty by the system.</li>
+</ul>
+</li>
+</ul>
+<h2 id="errors"><a class="header" href="#errors">Errors</a></h2>
+<p>The Storage Provider Pallet actions can fail with the following errors:</p>
+<ul>
+<li><code>StorageProviderExists</code> - A storage provider is already registered and tries to register again.</li>
+<li><code>StorageProviderNotFound</code> - This error is emitted by all extrinsics except registration in the storage provider pallet when a storage provider tries to call an extrinsic without registering first.</li>
+<li><code>InvalidSector</code> - This error can be emitted when:
+<ul>
+<li>A storage provider supplies a sector number during pre-commit exceeding the maximum number of sectors.</li>
+<li>A storage provider supplies a sector number during proof commit that exceeds the maximum amount of sectors.</li>
+</ul>
+</li>
+<li><code>InvalidProofType</code> - This error can be emitted when:
+<ul>
+<li>A storage provider submits a seal-proof type during pre-commit that is different than the one configured during registration.</li>
+<li>During a prove commit extrinsic, the proof type supplied by the storage provider is invalid.</li>
+<li>A storage provider submits a windowed PoSt proof type that is different from the one configured during registration.</li>
+</ul>
+</li>
+<li><code>NotEnoughFunds</code> - Emitted when a storage provider does not have enough funds for the pre-commit deposit.</li>
+<li><code>SectorNumberAlreadyUsed</code> - A storage provider tries to pre-commit a sector number that has already been used.</li>
+<li><code>ExpirationBeforeActivation</code> - A storage provider tries to pre-commit a sector where that sector expires before activation.</li>
+<li><code>ExpirationTooSoon</code> - A storage provider tries to pre-commit a sector with a total lifetime less than MinSectorExpiration.</li>
+<li><code>ExpirationTooLong</code> - A storage provider tries to pre-commit a sector with an expiration that exceeds <code>MaxSectorExpirationExtension</code>.</li>
+<li><code>MaxSectorLifetimeExceeded</code> - A storage provider tries to pre-commit a sector with a total lifetime that exceeds <code>SectorMaximumLifetime</code>.</li>
+<li><code>InvalidCid</code> - Emitted when a storage provider submits an invalid unsealed CID when trying to pre-commit a sector.</li>
+<li><code>ProveCommitAfterDeadline</code> - A storage provider has tried to prove a previously pre-committed sector after the proving deadline.</li>
+<li><code>PoStProofInvalid</code> - A proof that the storage provider submitted is invalid. Currently, this error is emitted when the proof length is 0.</li>
+<li><code>InvalidUnsealedCidForSector</code> - This error is emitted when the declared unsealed_cid for pre_commit is different from the one calculated by the system.</li>
+<li><code>FaultDeclarationTooLate</code> - A fault declaration was submitted after the fault declaration cutoff. The fault declaration can be submitted after the upcoming deadline is closed.</li>
+<li><code>FaultRecoveryTooLate</code> - A fault recovery was submitted after the fault recovery cutoff. The fault recovery can be submitted after the upcoming deadline is closed.</li>
+<li><code>DeadlineError</code> - An error was encountered in the deadline module. If you encounter this error, please report an issue, as this is a programmer error.</li>
+<li><code>PartitionError</code> - An error was encountered in the partition module. If you encounter this error, please report an issue, as this is a programmer error.</li>
+<li><code>StorageProviderError</code> - An error was encountered in the storage provider module. If you encounter this error, please report an issue, as this is a programmer error.</li>
+<li><code>SectorMapError</code> - An error was encountered in the sector map module. These errors can be:
+<ul>
+<li><code>FailedToInsertSector</code> - Internal bounds violation with Sectors. If you encounter this error please report an issue as this is a programmer error.</li>
+<li><code>FailedToInsertPartition</code> - Internal bounds violation with partitions. If you encounter this error please report an issue as this is a programmer error.</li>
+</ul>
+</li>
+<li><code>CouldNotActivateSector</code> - Failure during prove commit when trying to convert a previously pre-committed sector due to a programming error. Please report an issue if you receive this error.</li>
+<li><code>CouldNotVerifySectorForPreCommit</code> - Failure during pre-commit due to the <a href="../glossary.html#commitment-of-data">commd</a> calculation failing due to a programming error. Please report an issue if you receive this error.</li>
+<li><code>SlashingFailed</code> - Slashing of funds fails due to a programmer error. Please report an issue if you receive this error.</li>
+<li><code>ConversionError</code> - Due to a programmer error. Please report an issue if you receive this error.</li>
+</ul>
+<h2 id="pallet-constants"><a class="header" href="#pallet-constants">Pallet constants</a></h2>
+<p>The Storage Provider Pallet has the following constants:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Value</th></tr></thead><tbody>
+<tr><td><code id="const-proving-period"><code>WPoStProvingPeriod</code></code></td><td>The average <a href="../glossary.html#proving-period">period</a> for proving all sectors maintained by a storage provider.</td><td>4 Minutes</td></tr>
+<tr><td><code id="const-challenge-window"><code>WPoStChallengeWindow</code></code></td><td>The period immediately before a deadline during which a challenge can be generated by the chain and the requisite proofs computed.</td><td>2 Minutes</td></tr>
+<tr><td><code>WPoStChallengeLookBack</code></td><td>This period allows the storage providers to start working on the <a href="../glossary.html#post">PoSt</a> before the deadline is officially opened to receiving a <a href="../glossary.html#post">PoSt</a>.</td><td>1 Minute</td></tr>
+<tr><td><code id="const-period-deadlines"><code>WPoStPeriodDeadlines</code></code></td><td>Represents how many challenge deadlines there are in one proving period. Closely tied to <code>WPoStChallengeWindow</code>.</td><td>48</td></tr>
+<tr><td><code>MinSectorExpiration</code></td><td>Minimum time past the current block a sector may be set to expire.</td><td>5 Minutes</td></tr>
+<tr><td><code>MaxSectorExpirationExtension</code></td><td>Maximum time past the current block a sector may be set to expire.</td><td>60 Minutes</td></tr>
+<tr><td><code>SectorMaximumLifetime</code></td><td>Maximum time a sector can stay in pre-committed state.</td><td>120 Minutes</td></tr>
+<tr><td><code>MaxProveCommitDuration</code></td><td>Maximum time between <a href="#pre_commit_sector">pre-commit</a> and <a href="#prove_commit_sector">proving</a> the committed sector.</td><td>5 Minutes</td></tr>
+<tr><td><code>MaxPartitionsPerDeadline</code></td><td>Maximum number of partitions that can be assigned to a single deadline.</td><td>3000</td></tr>
+<tr><td><code>FaultMaxAge</code></td><td>Maximum time a <a href="../glossary.html#fault">fault</a> can exist before being removed by the pallet.</td><td>210 Minutes</td></tr>
+<tr><td><code id="fault-declaration-cutoff">FaultDeclarationCutoff</code></td><td>Time before a deadline opens that a storage provider can declare or recover a fault.</td><td>2 Minutes</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pallets/market.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../glossary.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pallets/market.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../glossary.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

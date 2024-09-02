@@ -1,0 +1,373 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>market - Polka Storage</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../getting-started/index.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../getting-started/local-testnet.html"><strong aria-hidden="true">2.1.</strong> Local Testnet - Polka Storage Parachain</a></li><li class="chapter-item expanded "><a href="../getting-started/car-server.html"><strong aria-hidden="true">2.2.</strong> CAR server</a></li><li class="chapter-item expanded "><a href="../getting-started/demo.html"><strong aria-hidden="true">2.3.</strong> Real-world use case demo</a></li></ol></li><li class="chapter-item expanded "><a href="../storage-provider-cli/index.html"><strong aria-hidden="true">3.</strong> Polka Storage Provider CLI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../storage-provider-cli/storage.html"><strong aria-hidden="true">3.1.</strong> storage</a></li><li class="chapter-item expanded "><a href="../storage-provider-cli/wallet.html"><strong aria-hidden="true">3.2.</strong> wallet</a></li></ol></li><li class="chapter-item expanded "><a href="../storagext-cli/index.html"><strong aria-hidden="true">4.</strong> Storagext CLI</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../storagext-cli/market.html" class="active"><strong aria-hidden="true">4.1.</strong> market</a></li><li class="chapter-item expanded "><a href="../storagext-cli/storage-provider.html"><strong aria-hidden="true">4.2.</strong> storage-provider</a></li><li class="chapter-item expanded "><a href="../storagext-cli/system.html"><strong aria-hidden="true">4.3.</strong> system</a></li></ol></li><li class="chapter-item expanded "><a href="../pallets/index.html"><strong aria-hidden="true">5.</strong> Pallets</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../pallets/market.html"><strong aria-hidden="true">5.1.</strong> Market</a></li><li class="chapter-item expanded "><a href="../pallets/storage-provider.html"><strong aria-hidden="true">5.2.</strong> Storage Provider</a></li></ol></li><li class="chapter-item expanded "><a href="../glossary.html"><strong aria-hidden="true">6.</strong> Glossary</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Polka Storage</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="the-market-command"><a class="header" href="#the-market-command">The <code>market</code> command</a></h1>
+<p>Under the <code>market</code> subcommand, you will find the <a href="../pallets/market.html">Market</a>-related extrinsics.
+This chapter covers the provided commands and how to use them.</p>
+<div class="warning">
+If you haven't done so before, you should read the <a href="./index.html"><code>storagext-cli</code> getting started</a> page,
+which covers the basic flags necessary to operate the CLI.
+</div>
+<h2 id="add-balance"><a class="header" href="#add-balance"><code>add-balance</code></a></h2>
+<p>The <code>add-balance</code> command allows you to add balance to your market account.
+It takes a single <code>AMOUNT</code> argument, the balance, to add to the market account,
+and the balance will be added to the <code>free</code> balance.</p>
+<h3 id="parameters"><a class="header" href="#parameters">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>AMOUNT</code></td><td>The amount to be added to the market balance</td><td>Positive integer</td></tr>
+</tbody></table>
+</div>
+<h3 id="example"><a class="header" href="#example"><a class="header" id="add-balance.example" href="#add-balance.example">Example</a></a></h3>
+<p>Adding 1000000000 <a href="../glossary.html#planck">Plancks</a> to Alice's account.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" market add-balance 1000000000
+</code></pre>
+<div class="warning">
+The <code>1000000000</code> value is not arbitrary, it is the <a href="https://support.polkadot.network/support/solutions/articles/65000168651-what-is-the-existential-deposit-">minimum existential deposit</a> for any Polkadot account. As such, when the Market account is being setup, the first deposit ever needs to meet this minimum to <b>create</b> the Market account.
+<p>If you attempt to create the Market account with less than <code>1000000000</code>, you will get the following error:</p>
+<pre>
+<code>Error: Runtime error: Token error: Account cannot exist with the funds that would be given.</code>
+</pre>
+</div>
+<blockquote>
+<p>You can read more about the <code>add_balance</code> extrinsic in <a href="../pallets/market.html#add_balance"><em>Pallets/Market Pallet/Add Balance</em></a>.</p>
+</blockquote>
+<h2 id="withdraw-balance"><a class="header" href="#withdraw-balance"><code>withdraw-balance</code></a></h2>
+<p>The <code>withdraw-balance</code> command allows you to withdraw balance from your market account.
+Like <a href="#add-balance"><code>add-balance</code></a>, <code>withdraw-balance</code> takes a single <code>AMOUNT</code> argument;
+note that <em>only the <code>free</code> balance can be withdrawn</em>.
+Likewise, you can only withdraw a balance amount lesser than or equal to the <code>free</code> amount and greater than 0 (\({free} \ge {amount} \gt 0\)).</p>
+<h3 id="parameters-1"><a class="header" href="#parameters-1">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>AMOUNT</code></td><td>The amount to be withdrawn to the market balance</td><td>Positive integer</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-1"><a class="header" href="#example-1"><a class="header" id="withdraw-balance.example" href="#withdraw-balance.example">Example</a></a></h3>
+<p>Withdrawing 10000 <a href="../glossary.html#planck">Plancks</a> from Alice's account.</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" market withdraw-balance 10000
+</code></pre>
+<blockquote>
+<p>You can read more about the <code>withdraw_balance</code> extrinsic in <a href="../pallets/market.html#withdraw-balance"><em>Pallets/Market Pallet/Withdraw Balance</em></a>.</p>
+</blockquote>
+<h2 id="publish-storage-deals"><a class="header" href="#publish-storage-deals"><code>publish-storage-deals</code></a></h2>
+<p>The <code>publish-storage-deals</code> command allows you to publish storage deals that have been agreed upon off-chain.
+The deals are to be submitted by the storage provider, having been previously signed by the client.</p>
+<div class="warning">
+Since this CLI is currently targeted at testing and demos, the client keypair is required to sign the deal.
+We know this is <i>not secure</i> and <i>unrealistic</i> in a production scenario (it is a good thing this is a demo)!
+</div>
+<h3 id="parameters-2"><a class="header" href="#parameters-2">Parameters</a></h3>
+<p>The client keypair can be passed using <code>--client-&lt;key kind&gt;</code>, where <code>&lt;key kind&gt;</code> is one of the <a href="index.html#getting-started">three supported keys</a>, like the global keys, one is required.</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>--client-sr25519-key</code></td><td>Sr25519 keypair</td><td>String, encoded as hex, BIP-39 or a dev phrase like <code>//Charlie</code></td></tr>
+<tr><td><code>--client-ecdsa-key</code></td><td>ECDSA keypair</td><td>String, encoded as hex, BIP-39 or a dev phrase like <code>//Charlie</code></td></tr>
+<tr><td><code>--client-ed25519-key</code></td><td>Ed25519 keypair</td><td>String, encoded as hex, BIP-39 or a dev phrase like <code>//Charlie</code></td></tr>
+<tr><td><code>DEALS</code></td><td>The deals to be published</td><td>JSON array. Can be passed as a string, or as a file path prefixed with <code>@</code> pointing to the file containing the JSON object.</td></tr>
+</tbody></table>
+</div>
+<p>The <code>DEALS</code> JSON array is composed of objects:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th><th>Type</th></tr></thead><tbody>
+<tr><td><code>piece_cid</code></td><td>Byte encoded CID</td><td><a href="https://github.com/multiformats/cid">CID</a></td></tr>
+<tr><td><code>piece_size</code></td><td>Size of the piece</td><td>Positive integer</td></tr>
+<tr><td><code>client</code></td><td>SS58 address of the storage client</td><td><a href="https://docs.substrate.io/learn/accounts-addresses-keys/">SS58 address</a></td></tr>
+<tr><td><code>provider</code></td><td>SS58 address of the storage provider</td><td><a href="https://docs.substrate.io/learn/accounts-addresses-keys/">SS58 address</a></td></tr>
+<tr><td><code>label</code></td><td>Arbitrary client chosen label</td><td>String, with a maximum length of 128 characters</td></tr>
+<tr><td><code>start_block</code></td><td>Block number on which the deal should start</td><td>Positive integer</td></tr>
+<tr><td><code>end_block</code></td><td>Block number on which the deal should end</td><td>Positive integer, <code>end_block &gt; start_block</code></td></tr>
+<tr><td><code>storage_price_per_block</code></td><td>Price for the storage specified per block[^storage_price_per_block]</td><td>Positive integer, in <a href="../glossary.html#planck">Plancks</a></td></tr>
+<tr><td><code>provider_collateral</code></td><td>Collateral which is slashed if the deal fails</td><td>Positive integer, in <a href="../glossary.html#planck">Plancks</a></td></tr>
+<tr><td><code>state</code></td><td>Deal state. Can only be set to <code>Published</code></td><td>String</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-2"><a class="header" href="#example-2"><a class="header" id="publish-storage-deals.example" href="#publish-storage-deals.example">Example</a></a></h3>
+<p>Publishing deals between Alice (the Storage Provider) and Charlie (the client).</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" market publish-storage-deals \
+  --client-sr25519-key "//Charlie" \
+  "@deals.json"
+</code></pre>
+<p>Where <code>deals.json</code> is a file with contents similar to:</p>
+<pre><code class="language-json">[
+  {
+    "piece_cid": "bafk2bzacecg3xxc4f2ql2hreiuy767u6r72ekdz54k7luieknboaakhft5rgk",
+    "piece_size": 1337,
+    "client": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+    "provider": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+    "label": "Super Cool (but secret) Plans for a new Polkadot Storage Solution",
+    "start_block": 69,
+    "end_block": 420,
+    "storage_price_per_block": 15,
+    "provider_collateral": 2000,
+    "state": "Published"
+  },
+  {
+    "piece_cid": "bafybeih5zgcgqor3dv6kfdtv3lshv3yfkfewtx73lhedgihlmvpcmywmua",
+    "piece_size": 1143,
+    "client": "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+    "provider": "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+    "label": "List of problematic (but flying) Boeing planes",
+    "start_block": 1010,
+    "end_block": 1997,
+    "storage_price_per_block": 1,
+    "provider_collateral": 3900,
+    "state": "Published"
+  }
+]
+</code></pre>
+<blockquote>
+<p>You can read more about the <code>publish_storage_deals</code> extrinsic in <a href="../pallets/market.html#publish_storage_deals"><em>Pallets/Market Pallet/Publish Storage Deals</em></a>.</p>
+</blockquote>
+<h2 id="settle-deal-payments"><a class="header" href="#settle-deal-payments"><code>settle-deal-payments</code></a></h2>
+<p>The <code>settle-deal-payments</code> command allows you to settle deal payments,
+that is, have the storage provider receive the owed funds from storing data for their clients.
+Non-existing deal IDs will be ignored.</p>
+<p>Anyone can settle anyone's deals, though there's little incentive to do so — if you're feeling charitable, who are we to stop you?!</p>
+<h3 id="parameters-3"><a class="header" href="#parameters-3">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>DEAL_IDS</code></td><td>The IDs for the deals to be settled</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-3"><a class="header" href="#example-3"><a class="header" id="settle-deal-payments.example" href="#settle-deal-payments.example">Example</a></a></h3>
+<p>Settling deals with the IDs 97, 1010, 1337, 42069:</p>
+<pre><code class="language-bash">storagext-cli --sr25519-key "//Alice" market settle-deal-payments 97 1010 1337 42069
+</code></pre>
+<blockquote>
+<p>You can read more about the <code>publish_storage_deals</code> extrinsic in <a href="../pallets/market.html#settle_deal_payments"><em>Pallets/Market Pallet/Settle Deal Payments</em></a>.</p>
+</blockquote>
+<h2 id="retrieve-balance"><a class="header" href="#retrieve-balance"><code>retrieve-balance</code></a></h2>
+<p>The <code>retrieve-balance</code> command allows you to check the balance of any market account.</p>
+<h3 id="parameters-4"><a class="header" href="#parameters-4">Parameters</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td><code>ACCOUNT_ID</code></td><td>The IDs of the account being checked</td></tr>
+</tbody></table>
+</div>
+<h3 id="example-4"><a class="header" href="#example-4"><a class="header" id="settle-deal-payments.example" href="#settle-deal-payments.example">Example</a></a></h3>
+<pre><code class="language-bash">storagext-cli market retrieve-balance "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY" # Alice's account
+</code></pre>
+<blockquote>
+<p>This extrinsic <strong>is not signed</strong>, and does not need to be called using any of the <code>--X-key</code> flags.</p>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../storagext-cli/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../storagext-cli/storage-provider.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../storagext-cli/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../storagext-cli/storage-provider.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
