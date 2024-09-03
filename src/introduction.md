@@ -35,7 +35,6 @@ We present a complete [real-world scenario](./getting-started/demo.md) in which 
 
 More information available about the project's genesis in:
 
-- Treasury Proposal — <https://polkadot.polkassembly.io/post/2107>
 - OpenGov Referendum — <https://polkadot.polkassembly.io/referenda/494>
 - Research Report — <https://github.com/eigerco/polkadot-native-storage/blob/main/doc/report/polkadot-native-storage-v1.0.0.pdf>
 - Polkadot Forum News Post — <https://forum.polkadot.network/t/polkadot-native-storage/4551>
