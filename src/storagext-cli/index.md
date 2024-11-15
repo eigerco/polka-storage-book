@@ -31,18 +31,46 @@ SR25519_KEY="//Charlie" storagext-cli --node-rpc "supercooldomain.com:1337" <com
 
 ### Flags
 
-| Name            | Description                                                                 |
-| --------------- | --------------------------------------------------------------------------- |
-| `--node-rpc`    | The node's RPC address (including port), defaults to `ws://127.0.0.1:42069` |
-| `--sr25519-key` | Sr25519 keypair, encoded as hex, BIP-39 or a dev phrase like `//Charlie`    |
-| `--ecdsa-key`   | ECDSA keypair, encoded as hex, BIP-39 or a dev phrase like `//Charlie`      |
-| `--ed25519-key` | Ed25519 keypair, encoded as hex, BIP-39 or a dev phrase like `//Charlie`    |
+| Name                      | Description                                                                                        |
+| ------------------------- | -------------------------------------------------------------------------------------------------- |
+| `--node-rpc`              | The node's RPC address (including port), defaults to `ws://127.0.0.1:42069`                        |
+| `--sr25519-key`           | Sr25519 keypair, encoded as hex, BIP-39 or a dev phrase like `//Charlie`                           |
+| `--ecdsa-key`             | ECDSA keypair, encoded as hex, BIP-39 or a dev phrase like `//Charlie`                             |
+| `--ed25519-key`           | Ed25519 keypair, encoded as hex, BIP-39 or a dev phrase like `//Charlie`                           |
+| `--format`                | The output format, either `json` or `plain` (case insensitive), defaults to `plain`                |
+| `--n-retries`             | The number of connection retries when trying to initially connect to the parachain, defaults to 10 |
+| `--retry-interval`        | The retry interval between connection retries, in milliseconds, defaults to 3000 (3 seconds)       |
+| `--wait-for-finalization` | Wait for the inclusion of the extrinsic call in a finalized block, will wait by default            |
+
+#### `--format`
+
+The `--format` global flag changes how extrinsic output is done, if the output is set to `plain`
+we **do not** make any guarantees about the output format, as such, you should not rely on it for scripts!
+
+If the output is set to `--json` all standard output from the CLI will be formatted as JSON, however,
+as it **currently** stands, we do not guarantee a stable interface — though we will make an effort to keep changes to a minimum and document them.
 
 [^keys]: Read more about how cryptographic keys are used in Polkadot — <https://wiki.polkadot.network/docs/learn-cryptography>.
 [^optional_keys]: If a key is passed to the CLI, but the operation called does not require a key, **the key will not be used**.
+
+#### `--n-retries` and `--retry-interval`
+
+These flags help you connect under a difficult network environment, or when you're launching the node and it's still booting up,
+this allows you to "actively wait" for the node to come online.
+
+#### `--wait-for-finalization`
+
+If you want to see the result of your extrinsic call, this flag is for you.
+By default, `storagext-cli` will wait for the result of the extrinsic,
+to disable this behaviour use `--wait-for-finalization=false`.
+
+When enabled, `storagext-cli` will wait until the extrinsic makes it to a finalized block
+and will report it's result — whether the call was successful or not.
 
 ## Sub-chapters
 
 - [Subcommand `market`](market.md)
 - [Subcommand `storage-provider`](storage-provider.md)
+- [Subcommand `proofs`](proofs.md)
+- [Subcommand `randomness`](randomness.md)
 - [Subcommand `system`](system.md)

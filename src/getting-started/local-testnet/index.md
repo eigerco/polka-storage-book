@@ -8,13 +8,15 @@ Charlie will be our contact point to the parachain network.
 
 ## Native Binaries
 
-Our latest releases's binaries are available to download and can be run without additional dependencies.
+The binaries for the latest releases are available to download and can be run without any additional dependencies.
 We support `Linux x86_64` and `MacOS ARM x64`. The commands below will download:
 
 - [Relay Chain](https://github.com/paritytech/polkadot-sdk/releases) binaries (`polkadot`, `polkadot-prepare-worker`, `polkadot-execute-worker`),
 - Polka Storage Parachain binary (`polka-storage-node`),
-- [Polka Storage Provider](../storage-provider-cli/index.md) internal node (`polka-storage-provider`),
-- [CLI for interacting with the parachain](../storagext-cli/) (`storagext-cli`),
+- [Polka Storage Provider](../../storage-provider-cli/server.md) internal node (`polka-storage-provider-server`),
+- [Polka Storage Provider Client](../../storage-provider-cli/client/index.md) internal node's RPC client and proving tools (`polka-storage-provider-client`),
+- [Storagext CLI](../../storagext-cli/index.md) to interact with a chain by sending extrinsics (`storagext-cli`),
+- [Mater CLI](../../mater-cli/index.md) for CARv2 file archive operations (`mater-cli`),
 - [zombienet](https://paritytech.github.io/zombienet/install.html) to spawn local testnets and orchestrate them (`zombienet`),
 - Polka Storage Parachain out-of-the-box zombienet's configuration (`polka-storage-testnet.toml`).
 
@@ -23,19 +25,21 @@ We support `Linux x86_64` and `MacOS ARM x64`. The commands below will download:
 1. Download the binaries:
 
 ```bash
-wget https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-v1.13.0/polkadot
-wget https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-v1.13.0/polkadot-prepare-worker
-wget https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-v1.13.0/polkadot-execute-worker
-wget https://s3.eu-central-1.amazonaws.com/polka-storage/linux_x86-64/polka-storage-node
-wget https://s3.eu-central-1.amazonaws.com/polka-storage/linux_x86-64/polka-storage-provider
-wget https://s3.eu-central-1.amazonaws.com/polka-storage/linux_x86-64/storagext-cli
+wget https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2407-1/polkadot
+wget https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2407-1/polkadot-prepare-worker
+wget https://github.com/paritytech/polkadot-sdk/releases/download/polkadot-stable2407-1/polkadot-execute-worker
+wget https://github.com/eigerco/polka-storage/releases/download/polka-storage-node-v0.0.0/polka-storage-node-linux-x86 -O polka-storage-node
+wget https://github.com/eigerco/polka-storage/releases/download/polka-storage-provider-client-v0.1.0/polka-storage-provider-client-linux-x86 -O polka-storage-provider-client
+wget https://github.com/eigerco/polka-storage/releases/download/polka-storage-provider-server-v0.1.0/polka-storage-provider-server-linux-x86 -O polka-storage-provider-server
+wget https://github.com/eigerco/polka-storage/releases/download/storagext-cli-v0.1.0/storagext-cli-linux-x86 -O storagext-cli
+wget https://github.com/eigerco/polka-storage/releases/download/mater-cli-v0.1.0/mater-cli-linux-x86 -O mater-cli
 wget https://github.com/paritytech/zombienet/releases/download/v1.3.106/zombienet-linux-x64 -O zombienet
 ```
 
 2. Setup permissions:
 
 ```bash
-chmod +x zombienet polka-storage-node polka-storage-provider storagext-cli polkadot polkadot-prepare-worker polkadot-execute-worker
+chmod +x zombienet polka-storage-node polka-storage-provider-client polka-storage-provider-server storagext-cli mater-cli polkadot polkadot-prepare-worker polkadot-execute-worker
 ```
 
 3. Run `zombienet`:
@@ -52,20 +56,22 @@ zombienet -p native spawn polka-storage-testnet.toml
 1. Download the binaries:
 
 ```bash
-wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polkadot
-wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polkadot-prepare-worker
-wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polkadot-execute-worker
-wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polka-storage-node
-wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/polka-storage-provider
-wget https://s3.eu-central-1.amazonaws.com/polka-storage/macos_arm/storagext-cli
+wget https://github.com/eigerco/polka-storage/releases/download/polka-storage-node-v0.0.0/polkadot-2407-1-macos-arm64 -O polkadot
+wget https://github.com/eigerco/polka-storage/releases/download/polka-storage-node-v0.0.0/polkadot-2407-1-prepare-worker-macos-arm64 -O polkadot-prepare-worker
+wget https://github.com/eigerco/polka-storage/releases/download/polka-storage-node-v0.0.0/polkadot-2407-1-execute-worker-macos-arm64 -O polkadot-execute-worker
+wget https://github.com/eigerco/polka-storage/releases/download/polka-storage-node-v0.0.0/polka-storage-node-macos-arm64 -O polka-storage-node
+wget https://github.com/eigerco/polka-storage/releases/download/polka-storage-provider-server-v0.1.0/polka-storage-provider-server-macos-arm64 -O polka-storage-provider-server
+wget https://github.com/eigerco/polka-storage/releases/download/polka-storage-provider-client-v0.1.0/polka-storage-provider-client-macos-arm64 -O polka-storage-provider-client
+wget https://github.com/eigerco/polka-storage/releases/download/storagext-cli-v0.1.0/storagext-cli-macos-arm64 -O storagext-cli
+wget https://github.com/eigerco/polka-storage/releases/download/mater-cli-v0.1.0/mater-cli-macos-arm64 -O mater-cli
 wget https://github.com/paritytech/zombienet/releases/download/v1.3.106/zombienet-macos-arm64 -O zombienet
 ```
 
 2. Setup permissions & de-quarantine:
 
 ```bash
-chmod +x zombienet polka-storage-node polka-storage-provider storagext-cli polkadot polkadot-prepare-worker polkadot-execute-worker
-xattr -d com.apple.quarantine zombienet polka-storage-node polka-storage-provider storagext-cli polkadot polkadot-prepare-worker polkadot-execute-worker
+chmod +x zombienet polka-storage-node polka-storage-provider-server polka-storage-provider-client storagext-cli mater-cli polkadot polkadot-prepare-worker polkadot-execute-worker
+xattr -d com.apple.quarantine zombienet polka-storage-node polka-storage-provider-server polka-storage-provider-client storagext-cli mater-cli polkadot polkadot-prepare-worker polkadot-execute-worker
 ```
 
 <div class="warning">
@@ -90,7 +96,7 @@ The parachain is also accessible using the Polkadot.js Apps interface by clickin
   </a>
 </p>
 
-Or interact with the chain via [`storagext-cli`](../storagext-cli/index.md), for example:
+Or interact with the chain via [`storagext-cli`](../../storagext-cli/index.md), for example:
 
 ```bash
 storagext-cli --sr25519-key "//Alice" storage-provider register Alice
@@ -131,7 +137,7 @@ image_pull_policy = "IfNotPresent"
 [relaychain]
 chain = "rococo-local"
 default_args = ["--detailed-log-output", "-lparachain=debug,xcm=trace,runtime=trace"]
-default_image = "docker.io/parity/polkadot:v1.13.0"
+default_image = "docker.io/parity/polkadot:stable2407-1"
 
 [[relaychain.nodes]]
 name = "alice"
@@ -153,11 +159,13 @@ id = 1000
 [[parachains.collators]]
 args = ["--detailed-log-output", "-lparachain=debug,xcm=trace,runtime=trace"]
 command = "polka-storage-node"
-image = "polkadotstorage.azurecr.io/parachain-node:0.1.0"
+image = "ghcr.io/eigerco/polka-storage-node:0.0.0"
 name = "charlie"
 rpc_port = 42069
 validator = true
 ```
+
+> For details on this configuration, refer to the [Zombienet Configuration](../../zombienet-config.md) chapter.
 
 2. Run the Parachain, and spawn the zombienet testnet in the Kubernetes cluster:
 
@@ -222,7 +230,9 @@ zombienet -p kubernetes spawn local-kube-testnet.toml
 
 Check if all zombienet pods were started successfully:
 
-`kubectl get pods --all-namespaces`
+```bash
+kubectl get pods --all-namespaces
+```
 
 <details>
 <summary>Click here to show the example output.</summary>
@@ -252,57 +262,66 @@ The parachain is available through the Polkadot.js Apps interface by clicking on
 
 This link will automatically connect to Charlie's node running on a local machine at port `42069`. The port is configured in `local-kube-testnet.toml` under `rpc_port` for Charlie's node.
 
-## Zombienet Configuration Breakdown
+## Checking the logs
 
-During the setup either download a file in the third step of [Linux](#linux-x86_64)/[MacOS](#macos-arm) — `polka-storage-testnet.toml` —
-or copy it from the first step of [Running the parachain](#running-the-parachain).
+At the end of the `zombienet` output you should see a table like so:
+```
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                                         Node Information                                                          │
+├──────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Name                         │ charlie                                                                                            │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Direct Link                  │ https://polkadot.js.org/apps/?rpc=ws://127.0.0.1:42069#/explorer                                   │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Prometheus Link              │ http://127.0.0.1:44955/metrics                                                                     │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Log Cmd                      │ tail -f                                                                                            │
+│                              │ /tmp/nix-shell.gQQj4Y/zombie-bcb786e1748ff0a6becd28289e1f70b9_-677866-G8ea9Qqs65DB/charlie.log     │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ Parachain ID                 │ 1000                                                                                               │
+├──────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ ChainSpec Path               │ /tmp/nix-shell.gQQj4Y/zombie-bcb786e1748ff0a6becd28289e1f70b9_-677866-G8ea9Qqs65DB/1000-rococo-lo… │
+└──────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
-### Similarities
+We strongly recommend you check the logs for the collator (in this case Charlie), using a text editor of your choice.
 
-The two files share most of the contents, so we'll start by covering their similarities.
-For more details refer to the [`zombienet` documentation](https://paritytech.github.io/zombienet/network-definition-spec.html):
+> If the **Log Cmd** is shortened with `...`, try to search for the folder using the zombienet namespace, available at the top of the table.
+> For example:
+> ```bash
+> $ ls /tmp | grep zombie-bcb786e1748ff0a6becd28289e1f70b9
+> ```
 
-#### `relaychain`
+After finding the `charlie.log` file, you should `grep` for errors relating to the extrinsic you just ran,
+for example, if you ran a `market` extrinsic, like `add-balance`, you would run:
 
-| Name              | Description                                   |
-| ----------------- | --------------------------------------------- |
-| `chain`           | The relaychain name                           |
-| `default_args`    | The default arguments passed to the `command` |
-| `default_command` | The default command to run the relaychain     |
-| `nodes`           | List of tables defining the nodes to run      |
+```bash
+$ grep "ERROR.*runtime::market" charlie.log
+```
 
-##### `nodes`
+Or, more generally:
 
-| Name        | Description                            |
-| ----------- | -------------------------------------- |
-| `name`      | The node name                          |
-| `validator` | Whether the node is a validator or not |
+```bash
+$ grep "<LOG_LEVEL>.*runtime::<EXTRINSIC_PALLET>" charlie.log
+```
 
-#### `parachains`
+Where `LOG_LEVEL` is one of:
+* `DEBUG`
+* `INFO`
+* `WARN`
+* `ERROR`
 
-A list of tables defining multiple parachains, in our case, we only care for our own parachain.
+And the extrinsic pallet, is one of:
+* `storage_provider`
+* `market`
+* `proofs`
 
-| Name            | Description                                                   |
-| --------------- | ------------------------------------------------------------- |
-| `cumulus_based` | Whether to use `cumulus` based generation                     |
-| `id`            | The parachain ID, we're using `1000` as a placeholder for now |
-| `collators`     | List of tables defining the collators                         |
-
-##### `collators`
-
-| Name        | Description                              |
-| ----------- | ---------------------------------------- |
-| `args`      | The arguments passed to the `command`    |
-| `command`   | The command to run the collator          |
-| `name`      | The collator name                        |
-| `validator` | Whether the collator is also a validator |
-
-### Differences
-
-The difference between them lies in the usage of container configurations:
-
-| Name                 | Description                                                                                                                                                                   |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `image_pull_policy`  | Defines when `zombienet` should pull an image; read more about it in the [Kubernetes documentation](https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy) |
-| `image`              | Defines which image to pull                                                                                                                                                   |
-| `ws_port`/`rpc_port` | Depending on the type of configuration (Native or Kubernetes), this variable sets the port for the collator RPC service                                                       |
+> **Tip:** if you are running into the `AllProposalsInvalid` error,
+> try searching for `insane deal` in the logs, you should find the cause faster!
+>
+> For example:
+> ```bash
+> $ grep "insane deal" -B 1 charlie.log
+> 2024-11-14 13:24:24.019 ERROR tokio-runtime-worker runtime::market: [Parachain] deal duration too short: 100 < 288000
+> 2024-11-14 13:24:24.019 ERROR tokio-runtime-worker runtime::market: [Parachain] insane deal: idx 0, error: ProposalError::DealDurationOutOfBounds
+> ```
