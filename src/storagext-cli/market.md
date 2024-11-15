@@ -1,6 +1,6 @@
 # The `market` command
 
-Under the `market` subcommand [Market](../pallets/market.md) related extrinsics are available.
+Under the `market` subcommand [Market](../architecture/pallets/market.md) related extrinsics are available.
 This chapter covers the provided commands and how to use them.
 
 <div class="warning">
@@ -37,14 +37,14 @@ An attempt to create a Market account with less than <code>1000000000</code>, wi
 </pre>
 </div>
 
-> More information about the `add_balance` extrinsic is available in [_Pallets/Market Pallet/Add Balance_](../pallets/market.md#add_balance).
+> More information about the `add_balance` extrinsic is available in [_Pallets/Market Pallet/Add Balance_](../architecture/pallets/market.md#add_balance).
 
 ## `withdraw-balance`
 
 The `withdraw-balance` withdraws balance from the market account of the extrinsic signer.
 Like [`add-balance`](#add-balance), `withdraw-balance` takes a single `AMOUNT` argument;
 note that _only `free` balance can be withdrawn_.
-Likewise, withdrawal of a balance amount lesser than or equal to the `free` amount and greater than 0 (\\({free} \ge {amount} \gt 0\\)).
+Likewise, withdrawal of a balance amount must be less than or equal to the `free` amount and greater than 0 (\\({free} \ge {amount} \gt 0\\)).
 
 ### Parameters
 
@@ -60,7 +60,7 @@ Withdrawing 10000 [Plancks](../glossary.md#planck) from Alice's account.
 storagext-cli --sr25519-key "//Alice" market withdraw-balance 10000
 ```
 
-> More about the `withdraw_balance` extrinsic is available in [_Pallets/Market Pallet/Withdraw Balance_](../pallets/market.md#withdraw-balance).
+> More about the `withdraw_balance` extrinsic is available in [_Pallets/Market Pallet/Withdraw Balance_](../architecture/pallets/market.md#withdraw-balance).
 
 ## `publish-storage-deals`
 
@@ -74,7 +74,7 @@ We know this is <i>not secure</i> and <i>unrealistic</i> in a production sce
 
 ### Parameters
 
-The client keypair can be passed using `--client-<key kind>`, where `<key kind>` is one of the [three supported keys](index.md#getting-started), like the global keys, one is required.
+> The client keypair can be passed using `--client-<key kind>`, where `<key kind>` is one of the [three supported keys](index.md#getting-started), like the global keys, one is required.
 
 | Name                   | Description               | Type                                                                                                                        |
 | ---------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
@@ -139,7 +139,7 @@ Where `deals.json` is a file with contents similar to:
 ]
 ```
 
-> More information about the `publish_storage_deals` extrinsic is available in [_Pallets/Market Pallet/Publish Storage Deals_](../pallets/market.md#publish_storage_deals).
+> More information about the `publish_storage_deals` extrinsic is available in [_Pallets/Market Pallet/Publish Storage Deals_](../architecture/pallets/market.md#publish_storage_deals).
 
 ## `settle-deal-payments`
 
@@ -162,7 +162,7 @@ Settling deals with the IDs 97, 1010, 1337, 42069:
 storagext-cli --sr25519-key "//Alice" market settle-deal-payments 97 1010 1337 42069
 ```
 
-> More information about the `publish_storage_deals` extrinsic is available in [_Pallets/Market Pallet/Settle Deal Payments_](../pallets/market.md#settle_deal_payments).
+> More information about the `publish_storage_deals` extrinsic is available in [_Pallets/Market Pallet/Settle Deal Payments_](../architecture/pallets/market.md#settle_deal_payments).
 
 ## `retrieve-balance`
 
@@ -180,4 +180,4 @@ The `retrieve-balance` command checks the balance of a given market account.
 storagext-cli market retrieve-balance "5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY" # Alice's account
 ```
 
-> This extrinsic **is not signed**, and does not need to be called using any of the `--X-key` flags.
+> This command **is not signed**, and does not need to be called using any of the `--X-key` flags.
